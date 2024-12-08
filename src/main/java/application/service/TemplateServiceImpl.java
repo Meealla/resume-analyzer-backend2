@@ -1,7 +1,7 @@
 package application.service;
 
 import domain.model.Template;
-import domain.repository.TemplateRepository;
+import infrastructure.repository.TemplateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

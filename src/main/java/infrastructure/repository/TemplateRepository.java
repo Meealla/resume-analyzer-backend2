@@ -1,4 +1,4 @@
-package domain.repository;
+package infrastructure.repository;
 
 import domain.model.Template;
 import org.springframework.data.mongodb.repository.MongoRepository;
