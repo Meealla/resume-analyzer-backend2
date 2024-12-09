@@ -9,5 +9,4 @@ public class ResumeGeneratorApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ResumeGeneratorApplication.class, args);
 	}
-
 }

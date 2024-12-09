@@ -1,17 +1,11 @@
 package infrastructure.controller;
 
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 import application.service.TemplateService;
-
 import domain.model.Template;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
-
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -24,6 +18,12 @@ import ru.kata.project.resumegenerator.ResumeGeneratorApplication;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(classes = ResumeGeneratorApplication.class) @AutoConfigureMockMvc
 public class TemplateControllerTest {
@@ -41,7 +41,7 @@ public class TemplateControllerTest {
 
 		when(templateService.getAllTemplates()).thenReturn(Collections.emptyList());
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/templates")).andExpect(status().isOk())
+		mockMvc.perform(get("/templates")).andExpect(status().isOk())
 			.andExpect(content().json("[]")).andDo(MockMvcResultHandlers.print());
 	}
 
@@ -56,8 +56,8 @@ public class TemplateControllerTest {
 		when(templateService.getAllTemplates()).thenReturn(templates);
 
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/templates"))
-			.andExpect(status().isOk())  // Check for 200 OK status
+		mockMvc.perform(get("/templates"))
+			.andExpect(status().isOk())
 			.andExpect(jsonPath("$[0].name").value("Template1"))
 			.andExpect(jsonPath("$[1].name").value("Template2"))
 			.andDo(MockMvcResultHandlers.print());

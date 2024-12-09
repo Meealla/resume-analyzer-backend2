@@ -9,5 +9,4 @@ public class ResumeAnalizerApplication {
     public static void main(String[] args) {
         SpringApplication.run(ResumeAnalizerApplication.class, args);
     }
-
 }
