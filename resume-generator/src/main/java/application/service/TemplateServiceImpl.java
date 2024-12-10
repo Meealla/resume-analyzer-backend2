@@ -6,43 +6,96 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+
+
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Сервис для работы с шаблонамми резюме.
+ * Данный класс представляет бизнесу-логику для реализации CRUD- операций.
+ */
+@Service
+public class TemplateServiceImpl implements TemplateService {
 
-@Service public class TemplateServiceImpl implements TemplateService {
 
     private final TemplateRepository templateRepository;
 
-    @Autowired public TemplateServiceImpl(TemplateRepository templateRepository) {
+    /**
+     * Конструктор для внедрения зависимости репозитория.
+     * @param templateRepository Репозиторий для работы с шаблонами.
+     */
+    @Autowired
+    public TemplateServiceImpl(TemplateRepository templateRepository) {
         this.templateRepository = templateRepository;
     }
 
-    @Override public List<Template> getAllTemplates() {
+    /**
+     * Получение списка всех шаблонов.
+     * @return Список всех шаблонов
+     */
+
+    @Override
+    public List<Template> getAllTemplates() {
         return templateRepository.findAll();
     }
 
-    @Override public Template getTemplateById(String id) {
-        return templateRepository.findById(id)
+    /**
+     * Получение шаблона по уникальному идентификатору.
+     * Если шаблон не найден, выбрасывается исключение.
+     * @param id Идентификатор шаблона.
+     * @return Шаблон с заданным идентификатором.э
+     * @throws RuntimeException возникает исключение, если шаблон не найден.
+     */
+
+    @Override
+    public Template getTemplateById(String id) {
+       UUID uuid = UUID.fromString(id);
+        return templateRepository.findById(uuid)
             .orElseThrow(() -> new RuntimeException("Шаблон не найден"));
     }
 
-    @Override public Template createTemplate(Template template) {
+    /**
+     * Создание нового шаблона.
+     * @param template Объект шаблона, который будет сохранен.
+     * @return Сохраненный шаблон.
+     */
+
+    @Override
+    public Template createTemplate(Template template) {
         return templateRepository.save(template);
     }
 
-    @Override public Template updateTemplate(String id, Template template) {
-        if (!templateRepository.existsById(id)) {
+    /**
+     * Обновление существующего шаблона.
+     * @param id       Уникальный идентификатор шаблона, который требуется обновить.
+     * @param template Новый шаблон с обновленными данными.
+     * @return Обновленный шаблон.
+     * @throws RuntimeException возникает исключение, если шаблон не нацден.
+     */
+
+    @Override
+    public Template updateTemplate(String id, Template template) {
+        UUID uuid = UUID.fromString(id);
+        if (!templateRepository.existsById(uuid)) {
             throw new RuntimeException();
         }
-        template.setId(UUID.fromString(id));
+        template.setId(uuid);
         return templateRepository.save(template);
     }
 
-    @Override public void deleteTemplate(String id) {
-        if (!templateRepository.existsById(id)) {
-            throw new RuntimeException("смапиртьолб");
+    /**
+     * Удаление шаблона.
+     * @param id Уникальный идентификатор шаблона.
+     * @throws RuntimeException возникает исключение, если шаблон не найден.
+     */
+
+    @Override
+    public void deleteTemplate(String id) {
+        UUID uuid = UUID.fromString(id);
+        if (!templateRepository.existsById(uuid)) {
+            throw new RuntimeException();
         }
-        templateRepository.deleteById(id);
+        templateRepository.deleteById(uuid);
     }
 }

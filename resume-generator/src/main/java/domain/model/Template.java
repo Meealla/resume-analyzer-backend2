@@ -5,29 +5,70 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.UUIDDeserializer;
 import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
-@Document(collection = "templates") @JsonIgnoreProperties(ignoreUnknown = true)
+/**
+ * Класс, представляющий шаблон резюме
+ * Данный класс хранит информацию о шаблоне,такую как название шаблона, описания, контент и дату создания
+ */
+
+
+@Document(collection = "templates")
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Template {
-	@Id @JsonDeserialize(using = UUIDDeserializer.class) private UUID id;
+	/**
+	 * Уникальный идентификатор, генерируется при создании нового шаблона
+	 */
+	@Id
+	@JsonDeserialize(using = UUIDDeserializer.class)
+	private UUID id;
 
-	@NotBlank(message = "Название шаблона не может быть пустым") private String name;
+	/**
+	 * Название шаблона.
+	 * Не должно быть пустым.
+	 */
+	@NotBlank(message = "Название шаблона не может быть пустым")
+	private String name;
 
-	@NotBlank(message = "Описание шаблона не может быть пустым") private String description;
+	/**
+	 * Описание шаблона.
+	 * Не должно быть пустым.
+	 */
+	@NotBlank(message = "Описание шаблона не может быть пустым")
+	private String description;
 
-	@NotBlank(message = "Контент шаблона не может быть пустым") private String content;
+	/**
+	 * Контент шаблона.
+	 * Не должен быть пустым.
+	 */
+	@NotBlank(message = "Контент шаблона не может быть пустым")
+	private String content;
 
-	@NotBlank() @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") private LocalDateTime createdAt;
+	/**
+	 * Дата и время создания шаблона.
+	 * Устанавливается автоматически в момент создания шаблона.
+	 */
+	@NotBlank()
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+	private LocalDateTime createdAt;
 
-	public Template() {
-
-	}
-
+	/**
+	 * Конструктор с параметрами для создания шаблона.
+	 * @param name Название шаблона.
+	 * @param description Описание шаблона.
+	 * @param content Контент шаблона.
+	 */
 	public Template(String name, String description, String content) {
 		this.id = UUID.randomUUID();
 		this.createdAt = LocalDateTime.now();
@@ -35,50 +76,20 @@ public class Template {
 		this.description = description;
 		this.content = content;
 	}
-
-	public UUID getId() {
-		return id;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Template template = (Template) o;
+		return Objects.equals(id, template.id) &&
+			Objects.equals(name, template.name) &&
+			Objects.equals(description, template.description) &&
+			Objects.equals(content, template.content);
 	}
 
-	public String getName() {
-		return name;
+	@Override
+	public final int hashCode() {
+		return Objects.hash(id, name, description, content);
 	}
 
-	public String getDescription() {
-		return description;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-
-	public void setId(UUID id) {
-		this.id = id;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	@Override public String toString() {
-		return "Template{" + "id=" + id + ", name='" + name + '\'' + ", description='" + description
-			+ '\'' + ", content='" + content + '\'' + ", createdAt=" + createdAt + '}';
-	}
 }
