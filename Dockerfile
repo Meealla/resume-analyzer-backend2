@@ -1,26 +1,32 @@
-# Use an official OpenJDK runtime as a parent image
-FROM openjdk:21-jdk-slim
+# Используем официальный образ OpenJDK для Java 21
+FROM openjdk:21-jdk-slim as build
 
-# Set the working directory in the container
+# Устанавливаем рабочую директорию в контейнере
 WORKDIR /app
 
-# Copy the local code to the container
-COPY . .
+# Копируем файл gradle wrapper и build.gradle в рабочую директорию
+COPY gradlew .
+COPY gradle ./gradle
+COPY build.gradle .
+COPY settings.gradle .
 
-COPY gradlew gradlew
-COPY gradle gradle
-RUN ./gradlew build
+# Копируем исходный код приложения
+COPY src ./src
 
-# Install Gradle (optional if needed for your project)
-RUN apt-get update && apt-get install -y gradle
+# Строим приложение
+RUN ./gradlew build --no-daemon
 
-# Build the application (assuming your build file is build.gradle)
-RUN ./gradlew build
+# Используем минимальный образ OpenJDK для продакшн
+FROM openjdk:21-jdk-slim
 
-# Expose the port your app will run on
-EXPOSE 8082
+# Устанавливаем рабочую директорию
+WORKDIR /app
 
-# Define the command to run your application
+# Копируем собранный JAR файл из предыдущего шага
+COPY --from=build /app/build/libs/resume-generator-0.0.1-SNAPSHOT.jar /app/resume-generator.jar
 
+# Указываем команду для запуска приложения
+ENTRYPOINT ["java", "-jar", "resume-generator.jar"]
 
-CMD ["java", "-jar", "build/libs/resume-analyzer-backend1-0.0.1-SNAPSHOT.jar"]
+# Открываем порт 8080
+EXPOSE 8080

@@ -1,3 +1,4 @@
+
 version: '3.8'
 
 services:
@@ -5,23 +6,29 @@ services:
     image: mongo:latest
     container_name: mongo-container
     environment:
-      MONGO_INITDB_DATABASE: ResumeGenerator  # Название базы данных
+      MONGO_INITDB_DATABASE: ResumeGenerator
     ports:
-      - "27017:27017"  # Прокси порта для доступа из внешнего мира
+      - "27017:27017"  # MongoDB будет доступен на порту 27017
     volumes:
-      - mongo-data:/data/db  # Хранение данных вне контейнера
+      - mongo-data:/data/db
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      retries: 5
+      start_period: 10s
+      timeout: 10s
 
   app:
-    build: .  # Путь к директории с Dockerfile для вашего Spring Boot приложения
+    build: .
     container_name: spring-boot-app
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/ResumeGenerator  # URI подключения к MongoDB
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/ResumeGenerator  # Используем имя контейнера mongodb для подключения
     ports:
-      - "8082:8082"  # Прокси порта для вашего приложения
+      - "8082:8082"  # Приложение будет доступно на порту 8082
     depends_on:
-      - mongodb  # Убедитесь, что MongoDB запускается первым
+      - mongodb
     networks:
       - app-network
 
