@@ -1,4 +1,4 @@
-package domain;
+package ru.kata.project.resumegenerator.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

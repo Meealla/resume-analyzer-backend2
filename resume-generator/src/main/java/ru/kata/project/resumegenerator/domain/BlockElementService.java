@@ -1,4 +1,4 @@
-package domain;
+package ru.kata.project.resumegenerator.domain;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

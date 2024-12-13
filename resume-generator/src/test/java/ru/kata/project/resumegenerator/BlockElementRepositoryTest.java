@@ -1,11 +1,9 @@
 package ru.kata.project.resumegenerator;
 
-import domain.BlockElement;
-import domain.BlockElementRepository;
+import ru.kata.project.resumegenerator.domain.BlockElement;
+import ru.kata.project.resumegenerator.domain.BlockElementRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -13,10 +11,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 import java.util.UUID;
-
 import static org.assertj.core.api.Assertions.assertThat; // Using AssertJ for assertions
 
-//@ExtendWith(SpringExtension.class)
+@ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
 @DataJpaTest
 public class BlockElementRepositoryTest {

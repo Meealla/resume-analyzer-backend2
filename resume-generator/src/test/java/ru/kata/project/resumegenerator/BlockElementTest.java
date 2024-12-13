@@ -2,9 +2,9 @@ package ru.kata.project.resumegenerator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import domain.BlockElement;
-import domain.Layout;
-import domain.SectionElementProps;
+import ru.kata.project.resumegenerator.domain.BlockElement;
+import ru.kata.project.resumegenerator.domain.Layout;
+import ru.kata.project.resumegenerator.domain.SectionElementProps;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;

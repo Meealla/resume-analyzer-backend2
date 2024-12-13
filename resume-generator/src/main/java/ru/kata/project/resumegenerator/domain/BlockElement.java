@@ -1,4 +1,4 @@
-package domain;
+package ru.kata.project.resumegenerator.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -42,6 +42,10 @@ public class BlockElement {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<BlockElement> children;
 
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private BlockElement parent;
+
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "layout_id")
     private Layout layout;
@@ -58,6 +62,21 @@ public class BlockElement {
         this.columns = columns;
         this.props = props;
         this.children = children;
+        this.layout = layout;
+    }
+
+    public BlockElement(UUID id, String name, String title, String type, String source, Integer columns,
+                        SectionElementProps props, List<BlockElement> children, BlockElement parent,
+                        Layout layout) {
+        this.id = id;
+        this.name = name;
+        this.title = title;
+        this.type = type;
+        this.source = source;
+        this.columns = columns;
+        this.props = props;
+        this.children = children;
+        this.parent = parent;
         this.layout = layout;
     }
 
@@ -143,5 +162,13 @@ public class BlockElement {
     @Override
     public int hashCode() {
         return Objects.hash(getId());
+    }
+
+    public BlockElement getParent() {
+        return parent;
+    }
+
+    public void setParent(BlockElement parent) {
+        this.parent = parent;
     }
 }
