@@ -2,8 +2,9 @@ package domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -13,40 +14,31 @@ import java.util.UUID;
  *  Настройки для отображения каждого блока (стили, текстовые данные).
  */
 @Entity
-@Table(name = "section_element_props")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SectionElementProps {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column
+    @GeneratedValue
     private UUID id;
 
     @JsonProperty("key")
-    @Column
     private String key;
 
     @JsonProperty("text")
-    @Column
     private String text;
 
     @JsonProperty("wrapperStyle")
-    @Column
     private String wrapperStyle;
 
     @JsonProperty("textStyle")
-    @Column
     private String textStyle;
 
     @JsonProperty("inputStyle")
-    @Column
     private String inputStyle;
 
     @JsonProperty("url")
-    @Column
     private String url;
 
     @JsonProperty("style")
-    @Column
     private String style;
 
     public SectionElementProps() { }
@@ -139,4 +131,3 @@ public class SectionElementProps {
         return Objects.hash(getId());
     }
 }
-

@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat; // Using AssertJ for a
 
 //@ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
-@DataJpaTest // Crucial - enables Spring to inject the repository
+@DataJpaTest
 public class BlockElementRepositoryTest {
 
     @Autowired

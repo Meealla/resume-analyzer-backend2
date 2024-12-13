@@ -14,32 +14,25 @@ import java.util.UUID;
  */
 @SuppressWarnings("checkstyle:SummaryJavadoc")
 @Entity
-@Table(name = "block_element")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BlockElement {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column
+    @GeneratedValue
     private UUID id;
 
     @JsonProperty("name")
-    @Column
     private String name;
 
     @JsonProperty("title")
-    @Column
     private String title;
 
     @JsonProperty("type")
-    @Column
     private String type;
 
     @JsonProperty("source")
-    @Column
     private String source;
 
     @JsonProperty("columns")
-    @Column
     private Integer columns;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -152,5 +145,3 @@ public class BlockElement {
         return Objects.hash(getId());
     }
 }
-
-

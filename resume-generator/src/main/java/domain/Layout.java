@@ -13,73 +13,56 @@ import java.util.UUID;
  * Данные для позиционирования блоков на странице.
  */
 @Entity
-@Table(name = "layout")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Layout {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column
+    @GeneratedValue
     private UUID id;
 
     @JsonProperty("i")
-    @Column
     private String i;
 
     @JsonProperty("x")
-    @Column
     private int x;
 
     @JsonProperty("y")
-    @Column
     private int y;
 
     @JsonProperty("w")
-    @Column
     private int w;
 
     @JsonProperty("h")
-    @Column
     private int h;
 
     @JsonProperty("minW")
-    @Column
     private Integer minW;
 
     @JsonProperty("maxW")
-    @Column
     private Integer maxW;
 
     @JsonProperty("minH")
-    @Column
     private Integer minH;
 
     @JsonProperty("maxH")
-    @Column
     private Integer maxH;
 
     @JsonProperty("moved")
-    @Column
     private Boolean moved;
 
     @JsonProperty("isStatic")
-    @Column
     private Boolean isStatic;
 
     @JsonProperty("isDraggable")
-    @Column
     private Boolean isDraggable;
 
     @JsonProperty("isResizable")
-    @Column
     private Boolean isResizable;
 
     @ElementCollection
     @JsonProperty("resizeHandles")
-    @Column
     private List<String> resizeHandles;
 
     @JsonProperty("isBounded")
-    @Column
     private Boolean isBounded;
 
     public Layout() {}
@@ -245,5 +228,3 @@ public class Layout {
         return Objects.hash(getId());
     }
 }
-
-
