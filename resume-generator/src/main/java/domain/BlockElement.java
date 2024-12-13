@@ -3,7 +3,6 @@ package domain;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -15,25 +14,32 @@ import java.util.UUID;
  */
 @SuppressWarnings("checkstyle:SummaryJavadoc")
 @Entity
+@Table(name = "block_element")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BlockElement {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column
     private UUID id;
 
     @JsonProperty("name")
+    @Column
     private String name;
 
     @JsonProperty("title")
+    @Column
     private String title;
 
     @JsonProperty("type")
+    @Column
     private String type;
 
     @JsonProperty("source")
+    @Column
     private String source;
 
     @JsonProperty("columns")
+    @Column
     private Integer columns;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -138,16 +144,13 @@ public class BlockElement {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof BlockElement that)) return false;
-        return Objects.equals(getId(), that.getId()) && Objects.equals(getName(),
-                that.getName()) && Objects.equals(getTitle(), that.getTitle()) && Objects.equals(getType(),
-                that.getType()) && Objects.equals(getSource(), that.getSource()) && Objects.equals(getColumns(),
-                that.getColumns()) && Objects.equals(getProps(), that.getProps()) && Objects.equals(getChildren(),
-                that.getChildren()) && Objects.equals(getLayout(), that.getLayout());
+        return Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getTitle(), getType(), getSource(), getColumns(), getProps(),
-                getChildren(), getLayout());
+        return Objects.hash(getId());
     }
 }
+
+

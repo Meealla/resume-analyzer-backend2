@@ -2,9 +2,7 @@ package domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -15,31 +13,40 @@ import java.util.UUID;
  *  Настройки для отображения каждого блока (стили, текстовые данные).
  */
 @Entity
+@Table(name = "section_element_props")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SectionElementProps {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column
     private UUID id;
 
     @JsonProperty("key")
+    @Column
     private String key;
 
     @JsonProperty("text")
+    @Column
     private String text;
 
     @JsonProperty("wrapperStyle")
+    @Column
     private String wrapperStyle;
 
     @JsonProperty("textStyle")
+    @Column
     private String textStyle;
 
     @JsonProperty("inputStyle")
+    @Column
     private String inputStyle;
 
     @JsonProperty("url")
+    @Column
     private String url;
 
     @JsonProperty("style")
+    @Column
     private String style;
 
     public SectionElementProps() { }
@@ -124,16 +131,12 @@ public class SectionElementProps {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof SectionElementProps that)) return false;
-        return Objects.equals(getId(), that.getId()) && Objects.equals(getKey(), that.getKey()) &&
-                Objects.equals(getText(), that.getText()) && Objects.equals(getWrapperStyle(),
-                that.getWrapperStyle()) && Objects.equals(getTextStyle(), that.getTextStyle()) &&
-                Objects.equals(getInputStyle(), that.getInputStyle()) && Objects.equals(getUrl(),
-                that.getUrl()) && Objects.equals(getStyle(), that.getStyle());
+        return Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getKey(), getText(), getWrapperStyle(), getTextStyle(), getInputStyle(),
-                getUrl(), getStyle());
+        return Objects.hash(getId());
     }
 }
+

@@ -2,11 +2,7 @@ package domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-
+import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -17,56 +13,73 @@ import java.util.UUID;
  * Данные для позиционирования блоков на странице.
  */
 @Entity
+@Table(name = "layout")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Layout {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column
     private UUID id;
 
     @JsonProperty("i")
+    @Column
     private String i;
 
     @JsonProperty("x")
+    @Column
     private int x;
 
     @JsonProperty("y")
+    @Column
     private int y;
 
     @JsonProperty("w")
+    @Column
     private int w;
 
     @JsonProperty("h")
+    @Column
     private int h;
 
     @JsonProperty("minW")
+    @Column
     private Integer minW;
 
     @JsonProperty("maxW")
+    @Column
     private Integer maxW;
 
     @JsonProperty("minH")
+    @Column
     private Integer minH;
 
     @JsonProperty("maxH")
+    @Column
     private Integer maxH;
 
     @JsonProperty("moved")
+    @Column
     private Boolean moved;
 
     @JsonProperty("isStatic")
+    @Column
     private Boolean isStatic;
 
     @JsonProperty("isDraggable")
+    @Column
     private Boolean isDraggable;
 
     @JsonProperty("isResizable")
+    @Column
     private Boolean isResizable;
 
     @ElementCollection
     @JsonProperty("resizeHandles")
+    @Column
     private List<String> resizeHandles;
 
     @JsonProperty("isBounded")
+    @Column
     private Boolean isBounded;
 
     public Layout() {}
@@ -224,19 +237,13 @@ public class Layout {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Layout layout)) return false;
-        return getX() == layout.getX() && getY() == layout.getY() && getW() == layout.getW() && getH() == layout.getH() &&
-                Objects.equals(getId(), layout.getId()) && Objects.equals(getI(), layout.getI()) &&
-                Objects.equals(getMinW(), layout.getMinW()) && Objects.equals(getMaxW(), layout.getMaxW()) &&
-                Objects.equals(getMinH(), layout.getMinH()) && Objects.equals(getMaxH(), layout.getMaxH()) &&
-                Objects.equals(getMoved(), layout.getMoved()) && Objects.equals(isStatic, layout.isStatic) &&
-                Objects.equals(isDraggable, layout.isDraggable) && Objects.equals(isResizable, layout.isResizable)
-                && Objects.equals(getResizeHandles(), layout.getResizeHandles()) &&
-                Objects.equals(isBounded, layout.isBounded);
+        return Objects.equals(getId(), layout.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getI(), getX(), getY(), getW(), getH(), getMinW(), getMaxW(), getMinH(),
-                getMaxH(), getMoved(), isStatic, isDraggable, isResizable, getResizeHandles(), isBounded);
+        return Objects.hash(getId());
     }
 }
+
+
