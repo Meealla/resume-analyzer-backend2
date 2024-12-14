@@ -74,7 +74,7 @@ public class TemplateServiceImpl implements TemplateService {
    */
 
     @Override
-  public Template updateTemplate(String id, Template template) {
+    public Template updateTemplate(String id, Template template) {
         UUID uuid = UUID.fromString(id);
         if (!templateRepository.existsById(uuid)) {
             throw new RuntimeException();

@@ -16,9 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
-
 /**
  * REST-контроллер для управления шаблонами резюме.
  * Обрабатывает HTTP-запросы, связанные с операциями CRUD для сущности {@link Template}.
@@ -108,7 +105,8 @@ public class TemplateController {
    */
 
     @PutMapping
-    public ResponseEntity<Template> updateTemplate(@PathVariable String id, @RequestBody Template template) {
+    public ResponseEntity<Template> updateTemplate(@PathVariable String id,
+                                                   @RequestBody Template template) {
         try {
             templateService.updateTemplate(id, template);
             return ResponseEntity.ok(template);
