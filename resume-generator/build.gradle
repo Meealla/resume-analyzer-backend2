@@ -19,6 +19,7 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'com.squareup.okhttp3:okhttp:4.12.0'
@@ -32,11 +33,6 @@ dependencies {
 	implementation 'org.projectlombok:lombok:1.18.36'
 	compileOnly 'org.projectlombok:lombok:1.18.36'
 	annotationProcessor 'org.projectlombok:lombok:1.18.36'
-	implementation group: 'com.puppycrawl.tools', name: 'checkstyle', version: '10.20.2'
-}
-checkstyle {
-	toolVersion = '10.12.1'
-	configFile = file('config/checkstyle/google_checks.xml')
 }
 
 tasks.withType(Checkstyle) {
@@ -46,9 +42,6 @@ tasks.withType(Checkstyle) {
 	}
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
 checkstyle {
 	toolVersion '10.20.2'
 	configFile file("\\src\\main\\java\\config\\checkstyle\\checkstyle.xml ")
