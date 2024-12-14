@@ -46,6 +46,7 @@ dependencies {
 	implementation 'org.projectlombok:lombok:1.18.36'
 	compileOnly 'org.projectlombok:lombok:1.18.36'
 	annotationProcessor 'org.projectlombok:lombok:1.18.36'
+	implementation group: 'com.puppycrawl.tools', name: 'checkstyle', version: '10.20.2'
 }
 
 tasks.named('test') {

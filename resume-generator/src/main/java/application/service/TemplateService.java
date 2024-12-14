@@ -1,7 +1,6 @@
 package application.service;
 
 import domain.model.Template;
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -11,14 +10,14 @@ import java.util.List;
  */
 
 public interface TemplateService {
-  /**
+    /**
    * Получение списка всех шаблонов.
    *
    * @return Список шаблонов
    **/
-  public List<Template> getAllTemplates();
+    public List<Template> getAllTemplates();
 
-  /**
+    /**
    * Получение шаблона по id.
    *
    * @param id Идентификатор шаблона.
@@ -26,17 +25,18 @@ public interface TemplateService {
    * @throws RuntimeException Исключение, возникающее при условии что шаблон не найден.
    */
 
-  public Template getTemplateById(String id);
+    @SuppressWarnings("checkstyle:CommentsIndentation")
+    public Template getTemplateById(String id);
 
-  /*** Создание нового шаблона.
+    /*** Создание нового шаблона.
    *
    * @param template Объект шаблона, который будет сохранен.
    * @return Сохраненный шаблон.
    */
 
-  public Template createTemplate(Template template);
+    public Template createTemplate(Template template);
 
-  /**
+    /**
    * Обновление сущетсвующего шаблона.
    *
    * @param id       Уникальный идентификатор шаблона, который требуется обновить.
@@ -44,21 +44,13 @@ public interface TemplateService {
    * @return Обновленный шаблон.
    * @throws RuntimeException Исключение, возникающее если шаблон не найден.
    */
-  public Template updateTemplate(String id, Template template);
+    public Template updateTemplate(String id, Template template);
 
-  /**
+    /**
    * Удаление шаблона.
    *
    * @param id Уникальный идентификатор шаблона.
    * @throws RuntimeException Исключение, возникающее если шаблон не найден.
    */
-  public void deleteTemplate(String id);
-
-  /**
-   * Список шаблонов, дата которых находится в указанном диапазоне дат.
-   *
-   * @param startDate Начальная дата диапазона.
-   * @param endDate   Конечная дата диапазона.
-   * @return Список шаблонов, входящих в указанный диапазон дат.
-   */
+    public void deleteTemplate(String id);
 }
