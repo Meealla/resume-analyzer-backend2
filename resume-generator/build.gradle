@@ -32,6 +32,7 @@ dependencies {
 	implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.4'
 	// https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
 	implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.3.Final'
+	testImplementation 'com.h2database:h2'
 }
 
 tasks.named('test') {

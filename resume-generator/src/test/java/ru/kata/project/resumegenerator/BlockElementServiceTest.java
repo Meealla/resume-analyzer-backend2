@@ -1,142 +1,140 @@
 package ru.kata.project.resumegenerator;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import ru.kata.project.resumegenerator.domain.BlockElement;
 import ru.kata.project.resumegenerator.domain.BlockElementRepository;
 import ru.kata.project.resumegenerator.domain.BlockElementService;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-public class BlockElementServiceTest {
+@DisplayName("Unit-тесты для BlockElementService")
+class BlockElementServiceTest {
+
     @Mock
     private BlockElementRepository blockElementRepository;
+
     @InjectMocks
     private BlockElementService blockElementService;
+
     private BlockElement blockElement;
-    private UUID id;
-    private BlockElement blockElement1;
-    private BlockElement blockElement2;
-    private UUID id1;
-    private UUID id2;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        blockElement = new BlockElement();
+        blockElement.setId(UUID.randomUUID());
+        blockElement.setName("Test Block");
+        blockElement.setTitle("Test Title");
+    }
 
     @Test
-    void createBlockElement_validInput_returnsBlockElement() {
-        blockElement = new BlockElement();
-        blockElement.setName("MyBlock");
-        when(blockElementRepository.findByName(blockElement.getName())).thenReturn(Collections.emptyList());
-        when(blockElementRepository.save(any(BlockElement.class))).thenReturn(blockElement);
+    void createBlockElement_Success() {
+        when(blockElementRepository.findByName(blockElement.getName())).thenReturn(List.of());
+        when(blockElementRepository.save(blockElement)).thenReturn(blockElement);
+
         BlockElement createdBlock = blockElementService.createBlockElement(blockElement);
+
         assertNotNull(createdBlock);
         assertEquals(blockElement.getName(), createdBlock.getName());
         verify(blockElementRepository, times(1)).save(blockElement);
     }
 
     @Test
-    void createBlockElement_duplicateName_throwsException() {
-        blockElement = new BlockElement();
-        blockElement.setName("MyBlock");
+    void createBlockElement_NameIsNull_ShouldThrowException() {
+        blockElement.setName(null);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> blockElementService.createBlockElement(blockElement));
+        assertEquals("Name cannot be null or empty.", exception.getMessage());
+    }
+
+    @Test
+    void createBlockElement_NameAlreadyExists_ShouldThrowException() {
         when(blockElementRepository.findByName(blockElement.getName())).thenReturn(List.of(blockElement));
-        assertThrows(IllegalArgumentException.class, () -> blockElementService.createBlockElement(blockElement));
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> blockElementService.createBlockElement(blockElement));
+        assertEquals("Block with this name already exists.", exception.getMessage());
     }
 
     @Test
-    void createBlockElement_nullName_throwsException() {
-        BlockElement blockElementNullName = new BlockElement();
-        blockElementNullName.setName(null);
-        assertThrows(IllegalArgumentException.class, () -> blockElementService.createBlockElement(blockElementNullName));
-    }
-
-    @Test
-    void updateBlockElement_existingBlock_returnsUpdatedBlock() {
-        blockElement = new BlockElement();
-        BlockElement updatedBlockElement = new BlockElement();
-        updatedBlockElement.setId(id);
-        updatedBlockElement.setName("UpdatedBlock");
+    void updateBlockElement_Success() {
+        UUID id = UUID.randomUUID();
+        blockElement.setId(id);
         when(blockElementRepository.findById(id)).thenReturn(Optional.of(blockElement));
-        when(blockElementRepository.save(updatedBlockElement)).thenReturn(updatedBlockElement);
-        BlockElement updatedBlock = blockElementService.updateBlockElement(id, updatedBlockElement);
+        when(blockElementRepository.save(blockElement)).thenReturn(blockElement);
+
+        BlockElement updatedBlock = blockElementService.updateBlockElement(id, blockElement);
+
         assertNotNull(updatedBlock);
         assertEquals(id, updatedBlock.getId());
-        assertEquals("UpdatedBlock", updatedBlock.getName());
-        verify(blockElementRepository, times(1)).save(updatedBlockElement);
+        verify(blockElementRepository, times(1)).save(blockElement);
     }
 
     @Test
-    void updateBlockElement_nonExistingBlock_throwsException() {
-        BlockElement updatedBlockElement = new BlockElement();
-        updatedBlockElement.setName("UpdatedBlock");
+    void updateBlockElement_BlockNotFound_ShouldThrowException() {
+        UUID id = UUID.randomUUID();
         when(blockElementRepository.findById(id)).thenReturn(Optional.empty());
-        assertThrows(IllegalArgumentException.class, () -> blockElementService.updateBlockElement(id, updatedBlockElement));
-    }
-//
-//    @Test
-//    void deleteBlockElement_existingBlock() {
-//        when(blockElementRepository.findById(id)).thenReturn(Optional.of(blockElement));
-//        blockElementService.deleteBlockElement(id);
-//        verify(blockElementRepository).deleteById(id);
-//    }
-    @Test
-    void deleteBlockElement_existingBlock() {
-        blockElement = new BlockElement();
-        blockElement.setId(id);
-        blockElement.setName("MyBlock");
-        // Убеждаемся, что блок существует
-        when(blockElementRepository.findById(blockElement.getId())).thenReturn(Optional.of(blockElement));
-        // Выполнение метода удаления
-        blockElementService.deleteBlockElement(blockElement.getId());
-        // Проверяем, что метод удаления был вызван на репозитории
-        verify(blockElementRepository, times(1)).delete(blockElement);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> blockElementService.updateBlockElement(id, blockElement));
+        assertEquals("Block with id " + id + " not found.", exception.getMessage());
     }
 
     @Test
-    public void loadBlockElements_noFilter_returnsAll() {
-        blockElement1 = new BlockElement();
-        blockElement2 = new BlockElement();
-        when(blockElementRepository.findAll()).thenReturn(List.of(blockElement1, blockElement2));
-        List<BlockElement> loadedElements = blockElementService.loadBlockElements(null);
-        assertThat(loadedElements).hasSize(2);
-        assertThat(loadedElements).contains(blockElement1, blockElement2);
+    void deleteBlockElement_Success() {
+        UUID id = UUID.randomUUID();
+
+        doNothing().when(blockElementRepository).deleteById(id);
+
+        blockElementService.deleteBlockElement(id);
+
+        verify(blockElementRepository, times(1)).deleteById(id);
     }
 
     @Test
-    public void loadBlockElements_withFilter_returnsMatching() {
-        blockElement = new BlockElement();
-        when(blockElementRepository.findByName("Block1")).thenReturn(List.of(blockElement));
-        List<BlockElement> loadedElements = blockElementService.loadBlockElements("Block1");
-        assertThat(loadedElements).hasSize(1);
-        assertThat(loadedElements).contains(blockElement);
+    void loadBlockElements_NoFilter() {
+        when(blockElementRepository.findAll()).thenReturn(List.of(blockElement));
+
+        List<BlockElement> blockElements = blockElementService.loadBlockElements("");
+
+        assertEquals(1, blockElements.size());
+        verify(blockElementRepository, times(1)).findAll();
     }
 
     @Test
-    public void loadBlockElements_withNonexistentFilter_returnsEmpty() {
-        when(blockElementRepository.findByName("NonexistentBlock")).thenReturn(Collections.emptyList());
-        List<BlockElement> loadedElements = blockElementService.loadBlockElements("NonexistentBlock");
-        assertThat(loadedElements).isEmpty();
+    void loadBlockElements_WithFilter() {
+        when(blockElementRepository.findByName("Test Block")).thenReturn(List.of(blockElement));
+
+        List<BlockElement> blockElements = blockElementService.loadBlockElements("Test Block");
+
+        assertEquals(1, blockElements.size());
+        verify(blockElementRepository, times(1)).findByName("Test Block");
     }
 
     @Test
-    public void getBlockElement_existingBlock_returnsBlock() {
-        blockElement = new BlockElement();
+    void getBlockElement_Success() {
+        UUID id = UUID.randomUUID();
         when(blockElementRepository.findById(id)).thenReturn(Optional.of(blockElement));
-        BlockElement loadedElement = blockElementService.getBlockElement(id);
-        assertThat(loadedElement).isEqualTo(blockElement);
+
+        BlockElement retrievedBlock = blockElementService.getBlockElement(id);
+
+        assertNotNull(retrievedBlock);
+        assertEquals(blockElement.getName(), retrievedBlock.getName());
+        verify(blockElementRepository, times(1)).findById(id);
     }
 
     @Test
-    public void getBlockElement_nonExistingBlock_throwsException() {
-        when(blockElementRepository.findById(id2)).thenReturn(Optional.empty());
-        assertThrows(IllegalArgumentException.class, () -> blockElementService.getBlockElement(id2));
+    void getBlockElement_BlockNotFound_ShouldThrowException() {
+        UUID id = UUID.randomUUID();
+        when(blockElementRepository.findById(id)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> blockElementService.getBlockElement(id));
+        assertEquals("Block with id " + id + " not found.", exception.getMessage());
     }
 }

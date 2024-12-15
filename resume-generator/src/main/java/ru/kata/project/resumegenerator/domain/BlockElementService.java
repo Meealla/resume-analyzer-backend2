@@ -57,4 +57,3 @@ public class BlockElementService {
         return blockElementRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Block with id " + id + " not found."));
     }
 }
-

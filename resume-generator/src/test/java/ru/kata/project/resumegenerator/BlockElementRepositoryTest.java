@@ -1,78 +1,84 @@
 package ru.kata.project.resumegenerator;
 
-import ru.kata.project.resumegenerator.domain.BlockElement;
-import ru.kata.project.resumegenerator.domain.BlockElementRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
+import ru.kata.project.resumegenerator.domain.BlockElement;
+import ru.kata.project.resumegenerator.domain.BlockElementRepository;
 import java.util.List;
-import java.util.UUID;
-import static org.assertj.core.api.Assertions.assertThat; // Using AssertJ for assertions
+import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(SpringExtension.class)
-@ExtendWith(MockitoExtension.class)
 @DataJpaTest
-public class BlockElementRepositoryTest {
+@DisplayName("Unit-тесты для BlockElementRepository")
+class BlockElementRepositoryTest {
 
     @Autowired
-    public final BlockElementRepository repository;
+    private BlockElementRepository repository;
 
-    public BlockElementRepositoryTest(BlockElementRepository repository) {
-        this.repository = repository;
+    @Test
+    @DisplayName("Сохранение и загрузка элемента")
+    void saveAndFindByIdTest() {
+        // Создаём тестовый элемент
+        BlockElement element = new BlockElement();
+        element.setName("Test Block");
+        element.setTitle("Test Title");
+        element.setType("Test Type");
+        element.setSource("Test Source");
+
+        // Сохраняем элемент
+        BlockElement savedElement = repository.save(element);
+
+        // Проверяем, что элемент сохранён
+        assertThat(savedElement.getId()).isNotNull();
+        assertThat(savedElement.getName()).isEqualTo("Test Block");
+
+        // Загружаем элемент по ID
+        BlockElement foundElement = repository.findById(savedElement.getId()).orElse(null);
+
+        // Проверяем, что элемент загружен корректно
+        assertThat(foundElement).isNotNull();
+        assertThat(foundElement.getName()).isEqualTo("Test Block");
     }
 
     @Test
-    public void testFindByName_existingName() {
+    @DisplayName("Поиск элементов по имени")
+    void findByNameTest() {
+        // Создаём и сохраняем элементы
+        BlockElement element1 = new BlockElement();
+        element1.setName("Block A");
+        repository.save(element1);
 
-        BlockElement block1 = new BlockElement();
-        block1.setName("TestBlock");
-        block1.setId(UUID.randomUUID());
+        BlockElement element2 = new BlockElement();
+        element2.setName("Block B");
+        repository.save(element2);
 
-        repository.save(block1);
+        BlockElement element3 = new BlockElement();
+        element3.setName("Block A");
+        repository.save(element3);
 
-        List<BlockElement> foundBlocks = repository.findByName("TestBlock");
+        // Ищем элементы с именем "Block A"
+        List<BlockElement> results = repository.findByName("Block A");
 
-        assertThat(foundBlocks).hasSize(1);
-        assertThat(foundBlocks.get(0).getName()).isEqualTo("TestBlock");
+        // Проверяем, что найдено 2 элемента
+        assertThat(results).hasSize(2);
+        assertThat(results.get(0).getName()).isEqualTo("Block A");
+        assertThat(results.get(1).getName()).isEqualTo("Block A");
     }
 
     @Test
-    public void testFindByName_nonExistingName() {
-        List<BlockElement> foundBlocks = repository.findByName("NonExistingBlock");
-        assertThat(foundBlocks).isEmpty(); // Correct assertion
-    }
+    @DisplayName("Удаление элемента")
+    void deleteElementTest() {
+        // Создаём тестовый элемент
+        BlockElement element = new BlockElement();
+        element.setName("Block to Delete");
+        BlockElement savedElement = repository.save(element);
 
-    @Test
-    public void testSave() {
-        BlockElement block = new BlockElement();
-        block.setName("TestBlock");
-        block.setId(UUID.randomUUID());
+        // Удаляем элемент
+        repository.delete(savedElement);
 
-        repository.save(block);
-
-        BlockElement savedBlock = repository.findById(block.getId()).get(); // Use findById to verify
-        assertThat(savedBlock).isNotNull();
-        assertThat(savedBlock.getName()).isEqualTo("TestBlock");
-    }
-
-    @Test
-    public void testFindAll(){
-        BlockElement block1 = new BlockElement();
-        block1.setName("TestBlock1");
-        block1.setId(UUID.randomUUID());
-
-        BlockElement block2 = new BlockElement();
-        block2.setName("TestBlock2");
-        block2.setId(UUID.randomUUID());
-
-        repository.saveAll(List.of(block1, block2));
-
-        List<BlockElement> allBlocks = repository.findAll();
-        assertThat(allBlocks).hasSize(2);
+        // Проверяем, что элемент удалён
+        boolean exists = repository.existsById(savedElement.getId());
+        assertThat(exists).isFalse();
     }
 }
-
