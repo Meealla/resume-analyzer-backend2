@@ -30,49 +30,48 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 public class Template {
     /**
-   * Уникальный идентификатор, генерируется при создании нового шаблона.
-   */
+     * Уникальный идентификатор, генерируется при создании нового шаблона.
+     */
     @Id
     @JsonDeserialize(using = UUIDDeserializer.class)
     private UUID id;
 
     /**
-   * Название шаблона.
-   * Не должно быть пустым.
-   */
+     * Название шаблона.
+     * Не должно быть пустым.
+     */
     @NotBlank(message = "Название шаблона не может быть пустым")
     private String name;
 
     /**
-   * Описание шаблона.
-   * Не должно быть пустым.
-   */
+     * Описание шаблона.
+     * Не должно быть пустым.
+     */
     @NotBlank(message = "Описание шаблона не может быть пустым")
     private String description;
 
     /**
-   * Контент шаблона.
-   * Не должен быть пустым.
-   */
+     * Контент шаблона.
+     * Не должен быть пустым.
+     */
     @NotBlank(message = "Контент шаблона не может быть пустым")
     private String content;
 
     /**
-   * Дата и время создания шаблона.
-   * Устанавливается автоматически в момент создания шаблона.
-   */
+     * Дата и время создания шаблона.
+     * Устанавливается автоматически в момент создания шаблона.
+     */
     @NotBlank()
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
 
     /**
-   * Конструктор с параметрами для создания шаблона.
-   *
-   * @param name Название шаблона.
-   * @param description Описание шаблона.
-   * @param content Контент шаблона.
-   */
-
+     * Конструктор с параметрами для создания шаблона.
+     *
+     * @param name Название шаблона.
+     * @param description Описание шаблона.
+     * @param content Контент шаблона.
+     */
     public Template(String name, String description, String content) {
         this.id = UUID.randomUUID();
         this.createdAt = LocalDateTime.now();
