@@ -1,7 +1,7 @@
-package infrastructure.controller;
+package webapp.resumegenerator.infrastructure.controller;
 
-import application.service.TemplateService;
-import domain.model.Template;
+import webapp.resumegenerator.application.service.TemplateService;
+import webapp.resumegenerator.domain.model.Template;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

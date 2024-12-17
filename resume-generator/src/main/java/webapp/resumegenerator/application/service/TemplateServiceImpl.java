@@ -1,7 +1,7 @@
-package application.service;
+package webapp.resumegenerator.application.service;
 
-import domain.model.Template;
-import infrastructure.repository.TemplateRepository;
+import webapp.resumegenerator.domain.model.Template;
+import webapp.resumegenerator.infrastructure.repository.TemplateRepository;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;

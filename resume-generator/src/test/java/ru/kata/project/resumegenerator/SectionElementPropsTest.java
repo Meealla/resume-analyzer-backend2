@@ -2,7 +2,7 @@ package ru.kata.project.resumegenerator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import domain.SectionElementProps;
+import webapp.resumegenerator.domain.SectionElementProps;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.util.UUID;

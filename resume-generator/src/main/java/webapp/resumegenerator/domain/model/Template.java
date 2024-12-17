@@ -1,4 +1,4 @@
-package domain.model;
+package webapp.resumegenerator.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

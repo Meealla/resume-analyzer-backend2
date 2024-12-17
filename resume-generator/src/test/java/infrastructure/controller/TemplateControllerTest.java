@@ -10,8 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import application.service.TemplateService;
-import domain.model.Template;
+import webapp.resumegenerator.application.service.TemplateService;
+import webapp.resumegenerator.domain.model.Template;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.kata.project.resumegenerator.ResumeGeneratorApplication;
+import webapp.resumegenerator.infrastructure.controller.TemplateController;
 
 /**
  * Тестовый класс для проверки функциональности {@link TemplateController}.

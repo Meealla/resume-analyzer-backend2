@@ -1,6 +1,6 @@
-package infrastructure.repository;
+package webapp.resumegenerator.infrastructure.repository;
 
-import domain.model.Template;
+import webapp.resumegenerator.domain.model.Template;
 import java.util.UUID;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
