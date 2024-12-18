@@ -33,6 +33,10 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
 	implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.3.Final'
 	testImplementation 'com.h2database:h2'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	// https://mvnrepository.com/artifact/com.sourcemuse.gradle.plugin/gradle-mongo-plugin
+	implementation group: 'com.sourcemuse.gradle.plugin', name: 'gradle-mongo-plugin', version: '2.0.0'
+
 }
 
 tasks.named('test') {
