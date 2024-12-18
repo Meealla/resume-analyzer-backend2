@@ -1,6 +1,7 @@
 package webapp.resumegenerator.application.service;
 
 import webapp.resumegenerator.domain.model.Template;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ public interface TemplateService {
      *
      * @return Список шаблонов
      */
-    public List<Template> getAllTemplates();
+    List<Template> getAllTemplates();
 
     /**
      * Получение шаблона по id.
@@ -23,10 +24,9 @@ public interface TemplateService {
      * @return Шаблон, соответствующий переданному id.
      * @throws RuntimeException Исключение, возникающее при условии что шаблон не найден.
      */
-    @SuppressWarnings("checkstyle:CommentsIndentation")
-    Template getTemplateById(String id);
 
-    /*** Создание нового шаблона.
+    Template getTemplateById(String id);
+    /** Создание нового шаблона.
      *
      * @param template Объект шаблона, который будет сохранен.
      * @return Сохраненный шаблон.
@@ -49,4 +49,21 @@ public interface TemplateService {
      * @throws RuntimeException Исключение, возникающее если шаблон не найден.
      */
     void deleteTemplate(String id);
+
+    /**
+     * Список шаблонов, дата которых находится в указанном диапазоне дат.
+     *
+     * @param startDate Начальная дата диапазона.
+     * @param endDate   Конечная дата диапазона.
+     * @return Список шаблонов, входящих в указанный диапазон дат.
+     */
+    List<Template> getTemplatesByDateRange(LocalDate startDate, LocalDate endDate);
+
+    /**
+     * Проверяет, существует ли шаблон с указанным именем.
+     *
+     * @param name Имя шаблона.
+     * @return Возвращает {@code true}, если шаблон с таким именем существует, иначе {@code false}.
+     */
+    boolean isTemplateNameExist(String name);
 }

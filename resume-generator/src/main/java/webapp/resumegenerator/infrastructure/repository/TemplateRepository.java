@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
  * Данный интерфейс предоставляет методы для выполнения CRUD-операция над сущностью {@link Template}.
  */
 @Repository
-public interface TemplateRepository extends MongoRepository<Template, UUID> {
+public interface TemplateRepository extends MongoRepository<Template, UUID>, CustomTemplateRepository {
 }
 

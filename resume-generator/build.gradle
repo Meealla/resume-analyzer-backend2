@@ -7,6 +7,19 @@ plugins {
 group = 'ru.kata.project'
 version = '0.0.1-SNAPSHOT'
 
+checkstyle {
+	toolVersion = '10.12.1'
+	configFile = file('config/checkstyle/google_checks.xml')
+}
+
+tasks.withType(Checkstyle) {
+	reports {
+		html.required = true
+		xml.required = false
+		//html.stylesheet = resources.text.fromFile('config/xsl/checkstyle-custom.xsl')
+	}
+}
+
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)
@@ -41,7 +54,6 @@ tasks.withType(Checkstyle) {
 		xml.required = false
 	}
 }
-
 checkstyle {
 	toolVersion '10.20.2'
 	configFile file("\\src\\main\\java\\config\\checkstyle\\checkstyle.xml ")

@@ -1,9 +1,9 @@
 package webapp.resumegenerator.infrastructure.controller;
 
-import webapp.resumegenerator.application.service.TemplateService;
-import webapp.resumegenerator.domain.model.Template;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import webapp.resumegenerator.application.service.TemplateService;
+import webapp.resumegenerator.domain.model.Template;
 
 /**
  * REST-контроллер для управления шаблонами резюме.
@@ -73,8 +76,8 @@ public class TemplateController {
      * @param template объект {@link Template}, содержащий данные для создания.
      * @return {@link ResponseEntity} с HTTP статусом 201 (Created) и созданным шаблоном.
      */
-    @PostMapping
-    public ResponseEntity<Template> createTemplate(@RequestBody Template template) {
+    @PostMapping(consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Template> createTemplate(@Valid @RequestBody Template template) {
         Template savedTemplate = templateService.createTemplate(template);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedTemplate);
     }
@@ -100,12 +103,39 @@ public class TemplateController {
      */
     @PutMapping
     public ResponseEntity<Template> updateTemplate(@PathVariable String id,
-                                                   @RequestBody Template template) {
+                                                   @Valid @RequestBody Template template) {
         try {
             templateService.updateTemplate(id, template);
             return ResponseEntity.ok(template);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    /**
+     * Извлекает шаблоны, за указанный период.
+     *
+     * @param startDate Начальная дата диапазона.
+     * @param endDate Конечная дата диапазона.
+     * @return Список шаблонов за указанный период.
+     */
+    @GetMapping("/data")
+    public List<Template> getTemplateData(@RequestParam String startDate,
+                                        @RequestParam String endDate) {
+        LocalDate start = LocalDate.parse(startDate);
+        LocalDate end = LocalDate.parse(endDate);
+        return templateService.getTemplatesByDateRange(start, end);
+    }
+
+    /**
+     * Проверка существует ли шаблон с данным именем.
+     *
+     * @param name Имя шаблона.
+     * @return Статус 200, если существует, 404 если нет.
+     */
+    @GetMapping("/exists")
+    public ResponseEntity<Boolean> existsTemplateName(@RequestParam String name) {
+        boolean exists = templateService.isTemplateNameExist(name);
+        return ResponseEntity.ok(exists);
     }
 }

@@ -1,11 +1,12 @@
 package webapp.resumegenerator.application.service;
 
-import webapp.resumegenerator.domain.model.Template;
-import webapp.resumegenerator.infrastructure.repository.TemplateRepository;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import webapp.resumegenerator.domain.model.Template;
+import webapp.resumegenerator.infrastructure.repository.TemplateRepository;
 
 /**
  * Сервис для работы с шаблонамми резюме.
@@ -47,7 +48,7 @@ public class TemplateServiceImpl implements TemplateService {
     public Template getTemplateById(String id) {
         UUID uuid = generateUUID(id);
         return templateRepository.findById(uuid)
-      .orElseThrow(() -> new RuntimeException("Шаблон не найден"));
+          .orElseThrow(() -> new RuntimeException("Шаблон не найден"));
     }
 
     /**
@@ -101,5 +102,29 @@ public class TemplateServiceImpl implements TemplateService {
      */
     private UUID generateUUID(String id) {
         return UUID.fromString(id);
+    }
+
+    /**
+     * Список шаблонов, дата которых находится в указанном диапазоне.
+     *
+     * @param startDate Начальная дата диапазона.
+     * @param endDate   Конечная дата диапазона.
+     * @return Список шаблонов, входящих в указанный диапазон дат.
+     */
+    @Override
+    public List<Template> getTemplatesByDateRange(LocalDate startDate,
+                                                LocalDate endDate) {
+        return templateRepository.findByDate(startDate, endDate);
+    }
+
+    /**
+     * Проверяет, существует ли шаблон с указанным именем.
+     *
+     * @param name Имя шаблона.
+     * @return Возвращает {@code true}, если шаблон с таким именем существует, иначе {@code false}.
+     */
+    @Override
+    public boolean isTemplateNameExist(String name) {
+        return !templateRepository.findByName(name).isEmpty();
     }
 }

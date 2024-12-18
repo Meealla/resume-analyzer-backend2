@@ -15,13 +15,11 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
 /**
  * Класс, представляющий шаблон резюме.
  * Данный класс хранит информацию о шаблоне,такую как название шаблона, описания,
  * контент и дату создания.
  */
-
 @Document(collection = "templates")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
@@ -79,7 +77,7 @@ public class Template {
         this.description = description;
         this.content = content;
     }
-  
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
