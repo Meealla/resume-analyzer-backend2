@@ -2,10 +2,24 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.0'
 	id 'io.spring.dependency-management' version '1.1.6'
+	id 'checkstyle'
 }
 
 group = 'ru.kata.project'
 version = '0.0.1-SNAPSHOT'
+
+checkstyle {
+	toolVersion = '10.12.1'
+	configFile = file('config/checkstyle/google_checks.xml')
+}
+
+tasks.withType(Checkstyle) {
+	reports {
+		html.required = true
+		xml.required = false
+		//html.stylesheet = resources.text.fromFile('config/xsl/checkstyle-custom.xsl')
+	}
+}
 
 java {
 	toolchain {
@@ -37,8 +51,26 @@ dependencies {
 	// https://mvnrepository.com/artifact/com.sourcemuse.gradle.plugin/gradle-mongo-plugin
 	implementation group: 'com.sourcemuse.gradle.plugin', name: 'gradle-mongo-plugin', version: '2.0.0'
 
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:3.4.0'
+	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.4.0'
+	implementation 'io.springfox:springfox-boot-starter:3.0.0'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.0'
+	implementation 'org.projectlombok:lombok:1.18.36'
+	compileOnly 'org.projectlombok:lombok:1.18.36'
+	annotationProcessor 'org.projectlombok:lombok:1.18.36'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+checkstyle {
+	toolVersion '10.20.2'
+	configFile file("\\src\\main\\java\\config\\checkstyle\\checkstyle.xml ")
+	ignoreFailures = true
+}
+checkstyleMain {
+	source ='src/main/java/'
+}
+checkstyleTest {
+	source ='src/test/java'
 }

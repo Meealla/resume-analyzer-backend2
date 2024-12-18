@@ -1,4 +1,5 @@
 rootProject.name = 'resume-analyzer-backend'
-
 includeBuild 'resume-analyzer'
 includeBuild 'resume-generator'
+
+
