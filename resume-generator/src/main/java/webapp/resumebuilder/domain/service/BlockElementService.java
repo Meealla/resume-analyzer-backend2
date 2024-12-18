@@ -1,8 +1,11 @@
-//package webapp.resumebuilder.domain;
+//package webapp.resumebuilder.domain.service;
 //
 //import jakarta.transaction.Transactional;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Service;
+//import webapp.resumebuilder.domain.model.BlockElement;
+//import webapp.resumebuilder.domain.repository.BlockElementRepository;
+//
 //import java.util.List;
 //import java.util.Optional;
 //import java.util.UUID;

@@ -1,7 +1,9 @@
-//package webapp.resumebuilder.domain;
+//package webapp.resumebuilder.domain.repository;
 //
 //import org.springframework.data.jpa.repository.JpaRepository;
 //import org.springframework.stereotype.Repository;
+//import webapp.resumebuilder.domain.model.BlockElement;
+//
 //import java.util.List;
 //import java.util.UUID;
 //

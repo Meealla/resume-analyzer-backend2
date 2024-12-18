@@ -1,10 +1,13 @@
-package webapp.resumebuilder.domain;
+package webapp.resumebuilder.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import webapp.resumebuilder.domain.model.Layout;
+import webapp.resumebuilder.domain.model.SectionElementProps;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
