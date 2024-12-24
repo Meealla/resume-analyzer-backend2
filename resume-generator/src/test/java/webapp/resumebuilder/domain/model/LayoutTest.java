@@ -1,10 +1,9 @@
-package webapp.resumebuilder;
+package webapp.resumebuilder.domain.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webapp.resumebuilder.domain.model.Layout;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
