@@ -1,4 +1,4 @@
-package webapp.resumegenerator.application.service;
+package webapp.resumegenerator.domain.service;
 
 import webapp.resumegenerator.domain.model.Template;
 import java.time.LocalDate;
