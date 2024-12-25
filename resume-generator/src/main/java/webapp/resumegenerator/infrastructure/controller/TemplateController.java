@@ -1,4 +1,4 @@
-package webapp.resumegenerator.domain.controller;
+package webapp.resumegenerator.infrastructure.controller;
 
 import jakarta.validation.Valid;
 import java.time.LocalDate;
