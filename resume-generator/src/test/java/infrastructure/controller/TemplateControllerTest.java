@@ -53,6 +53,8 @@ public class TemplateControllerTest {
      */
     private MockMvc mockMvc;
 
+    private Template testTemplate = new Template("Template1", "Description1", "Content1");;
+
     /**
      * Инициализация MockMvc перед выполнением каждого теста.
      */
@@ -82,7 +84,7 @@ public class TemplateControllerTest {
     @Test
     @DisplayName("Проверка, что /templates возвращает непустой список")
     public void testGetTemplates_nonEmptyList() throws Exception {
-        Template template1 = new Template("Template1", "Description1", "Content1");
+        Template template1 = testTemplate;
         Template template2 = new Template("Template2", "Description2", "Content2");
         List<Template> templates = List.of(template1, template2);
         when(templateService.getAllTemplates()).thenReturn(templates);
@@ -114,8 +116,8 @@ public class TemplateControllerTest {
     @DisplayName("Проверка что при создании нового шаблона возвращается созданный шаблон")
     public void testCreateTemplate() throws Exception {
         UUID generatedId = UUID.randomUUID();
-        Template inputTemplate = new Template("Template1", "Description1", "Content1");
-        Template savedTemplate = new Template("Template1", "Description1", "Content1");
+        Template inputTemplate = testTemplate;
+        Template savedTemplate = testTemplate;
         savedTemplate.setId(generatedId);
         when(templateService.createTemplate(any(Template.class))).thenReturn(savedTemplate);
         mockMvc.perform(
@@ -153,9 +155,9 @@ public class TemplateControllerTest {
     @DisplayName("Проверка что при создании новой версии шаблона создается такой же шаблон с версией, увеличенной на 1")
     public void testCreateNewTemplateVersion() throws Exception {
         UUID generatedId = UUID.randomUUID();
-        Template template = new Template("Template1", "Description1", "Content1");
+        Template template = testTemplate;
         template.setId(generatedId);
-        Template newVersion = new Template("Template1", "Description1", "Content1");
+        Template newVersion = new Template(testTemplate.getName(), testTemplate.getDescription(), testTemplate.getContent());
         newVersion.setVersion(template.getVersion() + 1);
         newVersion.setId(UUID.randomUUID());
         when(templateService.getTemplateById(generatedId.toString())).thenReturn(template);
@@ -180,9 +182,9 @@ public class TemplateControllerTest {
     @DisplayName("Проверка, что при поиске всех версий шаблона возвращается список всех версий в порядке убывания")
     public void testGetAllTemplateVersions() throws Exception {
         UUID generatedId = UUID.randomUUID();
-        Template template1 = new Template("Template1", "Description1", "Content1");
-        Template template2 = new Template("Template1", "Description1", "Content1");
-        Template template3 = new Template("Template1", "Description1", "Content1");
+        Template template1 = testTemplate;
+        Template template2 = new Template(template1.getName(), template1.getDescription(), template1.getContent());
+        Template template3 = new Template(template1.getName(), template1.getDescription(), template1.getContent());
         template2.setVersion(2);
         template3.setVersion(3);
         List<Template> templates = List.of(template3, template2, template1);
