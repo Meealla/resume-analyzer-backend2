@@ -1,8 +1,10 @@
-package webapp.resumegenerator.domain;
+package webapp.resumegenerator.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import webapp.resumegenerator.domain.SectionElementProps;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;

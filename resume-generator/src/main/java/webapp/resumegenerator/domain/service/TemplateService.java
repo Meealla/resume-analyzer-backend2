@@ -1,4 +1,4 @@
-package webapp.resumegenerator.application.service;
+package webapp.resumegenerator.domain.service;
 
 import webapp.resumegenerator.domain.model.Template;
 import java.time.LocalDate;
@@ -14,7 +14,7 @@ public interface TemplateService {
      * Получение списка всех шаблонов.
      *
      * @return Список шаблонов
-     **/
+     */
     List<Template> getAllTemplates();
 
     /**
@@ -24,8 +24,8 @@ public interface TemplateService {
      * @return Шаблон, соответствующий переданному id.
      * @throws RuntimeException Исключение, возникающее при условии что шаблон не найден.
      */
-    Template getTemplateById(String id);
 
+    Template getTemplateById(String id);
     /** Создание нового шаблона.
      *
      * @param template Объект шаблона, который будет сохранен.

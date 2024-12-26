@@ -1,4 +1,4 @@
-package webapp.resumegenerator.infrastructure.repository;
+package webapp.resumegenerator.domain.repository;
 
 import webapp.resumegenerator.domain.model.Template;
 import java.util.UUID;
@@ -13,3 +13,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TemplateRepository extends MongoRepository<Template, UUID>, CustomTemplateRepository {
 }
+

@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
+import webapp.resumegenerator.domain.repository.CustomTemplateRepository;
 
 /**
  * Реализация пользовательского репозитория для работы с коллекцией шаблонов в MongoDB.

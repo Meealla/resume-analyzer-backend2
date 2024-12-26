@@ -1,12 +1,13 @@
 package webapp.resumegenerator.application.service;
 
-import webapp.resumegenerator.domain.model.Template;
-import webapp.resumegenerator.infrastructure.repository.TemplateRepository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import webapp.resumegenerator.domain.model.Template;
+import webapp.resumegenerator.domain.repository.TemplateRepository;
+import webapp.resumegenerator.domain.service.TemplateService;
 
 /**
  * Сервис для работы с шаблонамми резюме.
