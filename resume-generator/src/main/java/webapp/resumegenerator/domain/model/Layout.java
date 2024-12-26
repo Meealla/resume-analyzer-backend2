@@ -6,7 +6,6 @@ import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;

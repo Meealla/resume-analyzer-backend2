@@ -11,14 +11,14 @@ import java.util.List;
  * В данном интерфейсе прописаны методы для работы с шаблонами резюме создание,
  * обновление, получение по id, удаление и получение всех шаблонов
  */
-
 public interface TemplateService {
+
     /**
      * Получение списка всех шаблонов.
      *
      * @return Список шаблонов
      **/
-    public List<Template> getAllTemplates();
+    List<Template> getAllTemplates();
 
     /**
      * Получение шаблона по id.
@@ -27,16 +27,14 @@ public interface TemplateService {
      * @return Шаблон, соответствующий переданному id.
      * @throws RuntimeException Исключение, возникающее при условии что шаблон не найден.
      */
+    Template getTemplateById(String id);
 
-    public Template getTemplateById(String id);
-
-    /*** Создание нового шаблона.
+    /** Создание нового шаблона.
      *
      * @param template Объект шаблона, который будет сохранен.
      * @return Сохраненный шаблон.
      */
-
-    public Template createTemplate(Template template);
+    Template createTemplate(Template template);
 
     /**
      * Обновление сущетсвующего шаблона.
@@ -46,7 +44,7 @@ public interface TemplateService {
      * @return Обновленный шаблон.
      * @throws RuntimeException Исключение, возникающее если шаблон не найден.
      */
-    public Template updateTemplate(String id, Template template);
+    Template updateTemplate(String id, Template template);
 
     /**
      * Удаление шаблона.
@@ -71,7 +69,7 @@ public interface TemplateService {
      * @param name Имя шаблона.
      * @return Возвращает {@code true}, если шаблон с таким именем существует, иначе {@code false}.
      */
-    public boolean isTemplateNameExist(String name);
+    boolean isTemplateNameExist(String name);
 
     /**
      * Получение всех шаблонов с пагинацией.

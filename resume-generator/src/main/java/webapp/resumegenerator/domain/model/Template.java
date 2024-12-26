@@ -2,9 +2,7 @@ package webapp.resumegenerator.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.deser.std.UUIDDeserializer;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -94,13 +92,11 @@ public class Template {
         }
         Template template = (Template) o;
         return Objects.equals(id, template.id) &&
-          Objects.equals(name, template.name) &&
-          Objects.equals(description, template.description) &&
-          Objects.equals(content, template.content);
+          Objects.equals(name, template.name);
     }
 
     @Override
     public final int hashCode() {
-        return Objects.hash(id, name, description, content);
+        return Objects.hash(id, name);
     }
 }

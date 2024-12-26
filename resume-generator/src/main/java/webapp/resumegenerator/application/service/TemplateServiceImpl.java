@@ -34,7 +34,6 @@ public class TemplateServiceImpl implements TemplateService {
      *
      * @return Список всех шаблонов
      */
-
     @Override
     public List<Template> getAllTemplates() {
         return templateRepository.findAll();
