@@ -1,9 +1,9 @@
-package webapp.resumebuilder.domain.service;
+package webapp.resumegenerator.domain.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import webapp.resumebuilder.domain.model.BlockElement;
-import webapp.resumebuilder.domain.repository.BlockElementRepository;
+import webapp.resumegenerator.domain.model.BlockElement;
+import webapp.resumegenerator.domain.repository.BlockElementRepository;
 
 import java.util.List;
 import java.util.Optional;

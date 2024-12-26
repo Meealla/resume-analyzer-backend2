@@ -1,9 +1,9 @@
-package webapp.resumebuilder.domain.repository;
+package webapp.resumegenerator.domain.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
-import webapp.resumebuilder.domain.model.BlockElement;
+import webapp.resumegenerator.domain.model.BlockElement;
 
 import java.util.List;
 import java.util.UUID;

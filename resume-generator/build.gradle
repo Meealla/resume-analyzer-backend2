@@ -78,3 +78,6 @@ checkstyleMain {
 checkstyleTest {
 	source ='src/test/java'
 }
+tasks.named('test') {
+	useJUnitPlatform()
+}

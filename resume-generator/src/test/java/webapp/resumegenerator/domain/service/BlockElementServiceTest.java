@@ -1,4 +1,4 @@
-package webapp.resumebuilder.domain.service;
+package webapp.resumegenerator.domain.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -7,8 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import webapp.resumebuilder.domain.model.BlockElement;
-import webapp.resumebuilder.domain.repository.BlockElementRepository;
+import webapp.resumegenerator.domain.model.BlockElement;
+import webapp.resumegenerator.domain.repository.BlockElementRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
