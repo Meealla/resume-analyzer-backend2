@@ -1,10 +1,9 @@
 package webapp.resumegenerator.infrastructure.controller;
 
-import webapp.resumegenerator.application.service.TemplateService;
-import webapp.resumegenerator.domain.model.Template;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import webapp.resumegenerator.domain.service.TemplateService;
+import webapp.resumegenerator.domain.model.Template;
 
 /**
  * REST-контроллер для управления шаблонами резюме.
@@ -76,7 +77,7 @@ public class TemplateController {
      * @return {@link ResponseEntity} с HTTP статусом 201 (Created) и созданным шаблоном.
      */
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Template> createTemplate(@RequestBody Template template) {
+    public ResponseEntity<Template> createTemplate(@Valid @RequestBody Template template) {
         Template savedTemplate = templateService.createTemplate(template);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedTemplate);
     }
@@ -102,7 +103,7 @@ public class TemplateController {
      */
     @PutMapping
     public ResponseEntity<Template> updateTemplate(@PathVariable String id,
-                                                   @RequestBody Template template) {
+                                                   @Valid @RequestBody Template template) {
         try {
             templateService.updateTemplate(id, template);
             return ResponseEntity.ok(template);

@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import webapp.resumegenerator.application.service.TemplateService;
+import webapp.resumegenerator.domain.service.TemplateService;
 import webapp.resumegenerator.domain.model.Template;
 import java.util.Collections;
 import java.util.List;
@@ -41,6 +41,10 @@ public class TemplateControllerTest {
      */
     @Mock
     private TemplateService templateService;
+    /**
+     * Экземпляр контроллера {@link TemplateController}, в который внедряется мокированный сервис.
+     * Сервис для работы с шаблонами.
+     */
 
     /**
      * Экземпляр контроллера {@link TemplateController}, в который внедряется мокированный сервис.
@@ -49,6 +53,7 @@ public class TemplateControllerTest {
     private TemplateController templateController;
 
     /**
+     * Инициализация MockMvc перед выполнением каждого теста.
      * Объект для выполнения HTTP-запросов и проверки ответов контроллера.
      */
     private MockMvc mockMvc;
@@ -142,3 +147,4 @@ public class TemplateControllerTest {
                 .andExpect(status().isNoContent());
     }
 }
+

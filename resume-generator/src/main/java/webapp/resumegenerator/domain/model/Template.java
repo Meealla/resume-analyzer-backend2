@@ -88,13 +88,11 @@ public class Template {
         }
         Template template = (Template) o;
         return Objects.equals(id, template.id) &&
-          Objects.equals(name, template.name) &&
-          Objects.equals(description, template.description) &&
-          Objects.equals(content, template.content);
+          Objects.equals(name, template.name);
     }
 
     @Override
     public final int hashCode() {
-        return Objects.hash(id, name, description, content);
+        return Objects.hash(id, name);
     }
 }
