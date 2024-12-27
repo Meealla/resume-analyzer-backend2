@@ -53,10 +53,11 @@ public class TemplateControllerTest {
     private TemplateController templateController;
 
     /**
-     * Инициализация MockMvc перед выполнением каждого теста.
      * Объект для выполнения HTTP-запросов и проверки ответов контроллера.
      */
     private MockMvc mockMvc;
+
+    private Template testTemplate = new Template("Template1", "Description1", "Content1");;
 
     /**
      * Инициализация MockMvc перед выполнением каждого теста.
@@ -87,7 +88,7 @@ public class TemplateControllerTest {
     @Test
     @DisplayName("Проверка, что /templates возвращает непустой список")
     public void testGetTemplates_nonEmptyList() throws Exception {
-        Template template1 = new Template("Template1", "Description1", "Content1");
+        Template template1 = testTemplate;
         Template template2 = new Template("Template2", "Description2", "Content2");
         List<Template> templates = List.of(template1, template2);
         when(templateService.getAllTemplates()).thenReturn(templates);
@@ -119,8 +120,8 @@ public class TemplateControllerTest {
     @DisplayName("Проверка что при создании нового шаблона возвращается созданный шаблон")
     public void testCreateTemplate() throws Exception {
         UUID generatedId = UUID.randomUUID();
-        Template inputTemplate = new Template("Template1", "Description1", "Content1");
-        Template savedTemplate = new Template("Template1", "Description1", "Content1");
+        Template inputTemplate = testTemplate;
+        Template savedTemplate = testTemplate;
         savedTemplate.setId(generatedId);
         when(templateService.createTemplate(any(Template.class))).thenReturn(savedTemplate);
         mockMvc.perform(
@@ -146,5 +147,61 @@ public class TemplateControllerTest {
         mockMvc.perform(delete("/templates/{id}", UUID.randomUUID()))
                 .andExpect(status().isNoContent());
     }
-}
 
+    /**
+     * Тест на проверку, что при создании новой версии шаблона возвращается новый шаблон
+     * поля name, description и content копируются,
+     * а version увеличивается на 1
+     *
+     * @throws Exception Исключение, возникающее при выполнении запроса
+     */
+    @Test
+    @DisplayName("Проверка что при создании новой версии шаблона создается такой же шаблон с версией, увеличенной на 1")
+    public void testCreateNewTemplateVersion() throws Exception {
+        UUID generatedId = UUID.randomUUID();
+        Template template = testTemplate;
+        template.setId(generatedId);
+        Template newVersion = new Template(testTemplate.getName(), testTemplate.getDescription(), testTemplate.getContent());
+        newVersion.setVersion(template.getVersion() + 1);
+        newVersion.setId(UUID.randomUUID());
+        when(templateService.getTemplateById(generatedId.toString())).thenReturn(template);
+        when(templateService.createNewTemplateVersion(template)).thenReturn(newVersion);
+        mockMvc.perform(MockMvcRequestBuilders.post("/templates/{id}/version", generatedId).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\":\"Template1\",\"description\":\"Description1\",\"content\":\"Content1\", \"version\":\"2\"}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("Template1"))
+                .andExpect(jsonPath("$.description").value("Description1"))
+                .andExpect(jsonPath("$.content").value("Content1"))
+                .andExpect(jsonPath("$.version").value(2))
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    /**
+     * Тест на проверку, что при поиске всех версий шаблона возвращается код 200
+     * и список всех версий в порядке убывания
+     *
+     * @throws Exception Исключение, возникающее при выполнении запроса
+     */
+    @Test
+    @DisplayName("Проверка, что при поиске всех версий шаблона возвращается список всех версий в порядке убывания")
+    public void testGetAllTemplateVersions() throws Exception {
+        UUID generatedId = UUID.randomUUID();
+        Template template1 = testTemplate;
+        Template template2 = new Template(template1.getName(), template1.getDescription(), template1.getContent());
+        Template template3 = new Template(template1.getName(), template1.getDescription(), template1.getContent());
+        template2.setVersion(2);
+        template3.setVersion(3);
+        List<Template> templates = List.of(template3, template2, template1);
+        when(templateService.getTemplateById(generatedId.toString())).thenReturn(template1);
+        when(templateService.findAllTemplateVersionsByName("Template1")).thenReturn(templates);
+        mockMvc.perform(get("/templates/{id}/versions", generatedId.toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").value("Template1"))
+                .andExpect(jsonPath("$[1].name").value("Template1"))
+                .andExpect(jsonPath("$[2].name").value("Template1"))
+                .andExpect(jsonPath("$[0].version").value(3))
+                .andExpect(jsonPath("$[1].version").value(2))
+                .andExpect(jsonPath("$[2].version").value(1))
+                .andDo(MockMvcResultHandlers.print());
+    }
+}

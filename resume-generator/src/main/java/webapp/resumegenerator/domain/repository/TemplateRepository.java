@@ -1,6 +1,8 @@
 package webapp.resumegenerator.domain.repository;
 
 import webapp.resumegenerator.domain.model.Template;
+
+import java.util.List;
 import java.util.UUID;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
@@ -12,5 +14,5 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface TemplateRepository extends MongoRepository<Template, UUID>, CustomTemplateRepository {
+    List<Template> findByNameOrderByVersionDesc(String name);
 }
-

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import webapp.resumegenerator.domain.service.TemplateService;
 
 /**
- * Сервис для работы с шаблонамми резюме.
+ * Сервис для работы с шаблонами резюме.
  * Данный класс представляет бизнес-логику для реализации CRUD- операций.
  */
 @Service
@@ -73,13 +73,13 @@ public class TemplateServiceImpl implements TemplateService {
      * @throws RuntimeException возникает исключение, если шаблон не нацден.
      */
     @Override
-    public Template updateTemplate(String id, Template template) {
+    public void updateTemplate(String id, Template template) {
         UUID uuid = generateUUID(id);
         if (!templateRepository.existsById(uuid)) {
             throw new RuntimeException();
         }
         template.setId(uuid);
-        return templateRepository.save(template);
+        templateRepository.save(template);
     }
 
     /**
@@ -132,6 +132,31 @@ public class TemplateServiceImpl implements TemplateService {
     }
 
     /**
+     * Находит все версии шаблона по имени.
+     *
+     * @param name Имя шаблона.
+     * @return Возвращает список всех существующих версий шаблона.
+     */
+    @Override
+    public List<Template> findAllTemplateVersionsByName(String name) {
+        return templateRepository.findByNameOrderByVersionDesc(name);
+    }
+
+    /**
+     * Создает новую версию шаблона на основе существующего.
+     *
+     * @param template Шаблон, новую версию которого нужно создать.
+     * @return Возвращает новую версию шаблона.
+     */
+    @Override
+    public Template createNewTemplateVersion(Template template) {
+        Template newTemplate = new Template(template.getName(), template.getContent(),
+                template.getDescription());
+        newTemplate.setVersion(template.getVersion() + 1);
+        return newTemplate;
+    }
+
+    /**
      * Получение всех шаблонов с пагинацией.
      *
      * @param pageable параметры пагинации.
@@ -141,4 +166,5 @@ public class TemplateServiceImpl implements TemplateService {
     public Page<Template> getAllTemplates(Pageable pageable) {
         return templateRepository.findAll(pageable);
     }
+
 }

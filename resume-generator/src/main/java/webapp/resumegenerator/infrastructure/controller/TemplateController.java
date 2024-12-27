@@ -1,6 +1,8 @@
 package webapp.resumegenerator.infrastructure.controller;
 
 import jakarta.validation.Valid;
+import webapp.resumegenerator.domain.service.TemplateService;
+import webapp.resumegenerator.domain.model.Template;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -149,6 +151,38 @@ public class TemplateController {
     public ResponseEntity<Boolean> existsTemplateName(@RequestParam String name) {
         boolean exists = templateService.isTemplateNameExist(name);
         return ResponseEntity.ok(exists);
+    }
+
+    /**
+     * Создает новую версию шаблона.
+     *
+     * @param id Id шаблона.
+     * @return {@link ResponseEntity} с HTTP статусом 201 (Created) и созданной новой версией шаблона.
+     */
+    @PostMapping("/{id}/version")
+    public ResponseEntity<Template> createNewTemplateVersion(@PathVariable String id) {
+        Template template = templateService.getTemplateById(id);
+        if (template == null) {
+            return ResponseEntity.notFound().build();
+        }
+        Template newTemplate = templateService.createNewTemplateVersion(template);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newTemplate);
+    }
+
+    /**
+     * Находит все версии шаблона.
+     *
+     * @param id Id шаблона.
+     * @return {@link ResponseEntity} с HTTP статусом 200 и списком всех версий шаблона.
+     */
+    @GetMapping("/{id}/versions")
+    public ResponseEntity<List<Template>> getTemplateVersions(@PathVariable String id) {
+        Template template = templateService.getTemplateById(id);
+        if (template == null) {
+            return ResponseEntity.notFound().build();
+        }
+        List<Template> listTemplate = templateService.findAllTemplateVersionsByName(template.getName());
+        return ResponseEntity.ok(listTemplate);
     }
 
     /**

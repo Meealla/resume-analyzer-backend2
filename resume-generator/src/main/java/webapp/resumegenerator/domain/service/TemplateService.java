@@ -12,7 +12,6 @@ import java.util.List;
  * обновление, получение по id, удаление и получение всех шаблонов
  */
 public interface TemplateService {
-
     /**
      * Получение списка всех шаблонов.
      *
@@ -41,10 +40,9 @@ public interface TemplateService {
      *
      * @param id       Уникальный идентификатор шаблона, который требуется обновить.
      * @param template Новый шаблон с обновленными данными.
-     * @return Обновленный шаблон.
      * @throws RuntimeException Исключение, возникающее если шаблон не найден.
      */
-    Template updateTemplate(String id, Template template);
+    void updateTemplate(String id, Template template);
 
     /**
      * Удаление шаблона.
@@ -52,7 +50,7 @@ public interface TemplateService {
      * @param id Уникальный идентификатор шаблона.
      * @throws RuntimeException Исключение, возникающее если шаблон не найден.
      */
-    public void deleteTemplate(String id);
+    void deleteTemplate(String id);
 
     /**
      * Список шаблонов, дата которых находится в указанном диапазоне дат.
@@ -61,7 +59,7 @@ public interface TemplateService {
      * @param endDate   Конечная дата диапазона.
      * @return Список шаблонов, входящих в указанный диапазон дат.
      */
-    public List<Template> getTemplatesByDateRange(LocalDate startDate, LocalDate endDate);
+    List<Template> getTemplatesByDateRange(LocalDate startDate, LocalDate endDate);
 
     /**
      * Проверяет, существует ли шаблон с указанным именем.
@@ -72,10 +70,27 @@ public interface TemplateService {
     boolean isTemplateNameExist(String name);
 
     /**
+     * Находит все версии шаблона по имени.
+     *
+     * @param name Имя шаблона.
+     * @return Возвращает список всех существующих версий шаблона.
+     */
+    List<Template> findAllTemplateVersionsByName(String name);
+
+    /**
+     * Создает новую версию шаблона на основе существующего.
+     *
+     * @param template Шаблон, новую версию которого нужно создать.
+     * @return Возвращает новую версию шаблона.
+     */
+    Template createNewTemplateVersion(Template template);
+
+    /**
      * Получение всех шаблонов с пагинацией.
      *
      * @param pageable параметры пагинации.
      * @return Экземпляр с шаблонами.
      */
     Page<Template> getAllTemplates(Pageable pageable);
+
 }
