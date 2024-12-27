@@ -1,5 +1,3 @@
-
-
 package webapp.resumegenerator.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -17,6 +15,7 @@ import java.util.UUID;
  * @version 1.0.0
  * Основной класс, который описывает блоки в резюме.
  */
+@SuppressWarnings("checkstyle:SummaryJavadoc")
 @Document(collection = "block_elements")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BlockElement {

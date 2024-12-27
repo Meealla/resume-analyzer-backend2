@@ -1,5 +1,7 @@
 package webapp.resumegenerator.domain.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import webapp.resumegenerator.domain.model.Template;
 import java.time.LocalDate;
 import java.util.List;
@@ -10,11 +12,12 @@ import java.util.List;
  * обновление, получение по id, удаление и получение всех шаблонов
  */
 public interface TemplateService {
+
     /**
      * Получение списка всех шаблонов.
      *
      * @return Список шаблонов
-     */
+     **/
     List<Template> getAllTemplates();
 
     /**
@@ -24,8 +27,8 @@ public interface TemplateService {
      * @return Шаблон, соответствующий переданному id.
      * @throws RuntimeException Исключение, возникающее при условии что шаблон не найден.
      */
-
     Template getTemplateById(String id);
+
     /** Создание нового шаблона.
      *
      * @param template Объект шаблона, который будет сохранен.
@@ -38,9 +41,10 @@ public interface TemplateService {
      *
      * @param id       Уникальный идентификатор шаблона, который требуется обновить.
      * @param template Новый шаблон с обновленными данными.
+     * @return Обновленный шаблон.
      * @throws RuntimeException Исключение, возникающее если шаблон не найден.
      */
-    void updateTemplate(String id, Template template);
+    Template updateTemplate(String id, Template template);
 
     /**
      * Удаление шаблона.
@@ -48,7 +52,7 @@ public interface TemplateService {
      * @param id Уникальный идентификатор шаблона.
      * @throws RuntimeException Исключение, возникающее если шаблон не найден.
      */
-    void deleteTemplate(String id);
+    public void deleteTemplate(String id);
 
     /**
      * Список шаблонов, дата которых находится в указанном диапазоне дат.
@@ -57,7 +61,7 @@ public interface TemplateService {
      * @param endDate   Конечная дата диапазона.
      * @return Список шаблонов, входящих в указанный диапазон дат.
      */
-    List<Template> getTemplatesByDateRange(LocalDate startDate, LocalDate endDate);
+    public List<Template> getTemplatesByDateRange(LocalDate startDate, LocalDate endDate);
 
     /**
      * Проверяет, существует ли шаблон с указанным именем.
@@ -66,4 +70,12 @@ public interface TemplateService {
      * @return Возвращает {@code true}, если шаблон с таким именем существует, иначе {@code false}.
      */
     boolean isTemplateNameExist(String name);
+
+    /**
+     * Получение всех шаблонов с пагинацией.
+     *
+     * @param pageable параметры пагинации.
+     * @return Экземпляр с шаблонами.
+     */
+    Page<Template> getAllTemplates(Pageable pageable);
 }

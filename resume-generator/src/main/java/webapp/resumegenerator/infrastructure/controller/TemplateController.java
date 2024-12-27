@@ -1,13 +1,20 @@
 package webapp.resumegenerator.infrastructure.controller;
 
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
 import jakarta.validation.Valid;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,8 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import webapp.resumegenerator.domain.service.TemplateService;
 import webapp.resumegenerator.domain.model.Template;
+import webapp.resumegenerator.domain.service.TemplateService;
 
 /**
  * REST-контроллер для управления шаблонами резюме.
@@ -26,6 +33,7 @@ import webapp.resumegenerator.domain.model.Template;
 @RestController
 @RequestMapping("/templates")
 public class TemplateController {
+
     /**
      * Сервис для выполнения бизнес логики.
      */
@@ -42,17 +50,19 @@ public class TemplateController {
     }
 
     /**
-     * Получение списка всех шаблонов.
+     * Получение списка шаблонов с поддержкой пагинации.
      *
-     * @return {@link ResponseEntity} с HTTP статусом 200 (OK) и списком шаблонов. Если шаблонов нет, возвращает пустой список.
+     * @param page Номер страницы.
+     *
+     * @param size Количество элементов на странице.
+     * @return {@link ResponseEntity} с HTTP статусом 200 (OK) и страницей шаблонов.
      */
     @GetMapping
-    public ResponseEntity<List<Template>> getTemplates() {
-        List<Template> templates = templateService.getAllTemplates();
-        if (templates.isEmpty()) {
-            return ResponseEntity.ok(Collections.emptyList());
-        }
-        return ResponseEntity.ok(templates);
+    public Page<Template> getTemplates(
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return templateService.getAllTemplates(pageable);
     }
 
     /**
@@ -98,10 +108,11 @@ public class TemplateController {
      * Обновляет существующий шаблон.
      *
      * @param id Уникальный идентификатор, обновленного шаблона.
+     *
      * @param template Обновленный шаблон.
      * @return Обновленный шаблон.
      */
-    @PutMapping
+    @PutMapping(("/{id}"))
     public ResponseEntity<Template> updateTemplate(@PathVariable String id,
                                                    @Valid @RequestBody Template template) {
         try {
@@ -116,6 +127,7 @@ public class TemplateController {
      * Извлекает шаблоны, за указанный период.
      *
      * @param startDate Начальная дата диапазона.
+     *
      * @param endDate Конечная дата диапазона.
      * @return Список шаблонов за указанный период.
      */
@@ -137,5 +149,22 @@ public class TemplateController {
     public ResponseEntity<Boolean> existsTemplateName(@RequestParam String name) {
         boolean exists = templateService.isTemplateNameExist(name);
         return ResponseEntity.ok(exists);
+    }
+
+    /**
+     * Обрабатывает исключений валидации.
+     *
+     * @param ex Содержит ошибки валидации.
+     * @return {@link ResponseEntity} с картой ошибок (поле - сообщение).
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach(error -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 }

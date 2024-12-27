@@ -60,6 +60,7 @@ public class Layout {
     @JsonProperty("isResizable")
     private Boolean isResizable;
 
+    @ElementCollection
     @JsonProperty("resizeHandles")
     private List<String> resizeHandles;
 
