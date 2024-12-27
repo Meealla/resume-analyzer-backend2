@@ -1,12 +1,14 @@
 package webapp.resumegenerator.application.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import webapp.resumegenerator.domain.model.Template;
+import webapp.resumegenerator.domain.repository.TemplateRepository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import webapp.resumegenerator.domain.model.Template;
-import webapp.resumegenerator.domain.repository.TemplateRepository;
 import webapp.resumegenerator.domain.service.TemplateService;
 
 /**
@@ -71,13 +73,13 @@ public class TemplateServiceImpl implements TemplateService {
      * @throws RuntimeException возникает исключение, если шаблон не нацден.
      */
     @Override
-    public void updateTemplate(String id, Template template) {
+    public Template updateTemplate(String id, Template template) {
         UUID uuid = generateUUID(id);
         if (!templateRepository.existsById(uuid)) {
             throw new RuntimeException();
         }
         template.setId(uuid);
-        templateRepository.save(template);
+        return templateRepository.save(template);
     }
 
     /**
@@ -127,5 +129,16 @@ public class TemplateServiceImpl implements TemplateService {
     @Override
     public boolean isTemplateNameExist(String name) {
         return !templateRepository.findByName(name).isEmpty();
+    }
+
+    /**
+     * Получение всех шаблонов с пагинацией.
+     *
+     * @param pageable параметры пагинации.
+     * @return Страница с шаблонами.
+     */
+    @Override
+    public Page<Template> getAllTemplates(Pageable pageable) {
+        return templateRepository.findAll(pageable);
     }
 }

@@ -1,13 +1,16 @@
 package webapp.resumegenerator.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
-import webapp.resumegenerator.domain.SectionElementProps;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 
 /**
  * @author Ildar Khuzin
@@ -15,40 +18,39 @@ import java.util.UUID;
  * Основной класс, который описывает блоки в резюме.
  */
 @SuppressWarnings("checkstyle:SummaryJavadoc")
-@Entity
+@Document(collection = "block_elements")
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Data
+@NoArgsConstructor
 public class BlockElement {
     @Id
-    @GeneratedValue
     private UUID id;
 
     @JsonProperty("name")
+    @NotNull(message = "Имя не может быть пустым.")
     private String name;
 
     @JsonProperty("title")
+    @NotNull(message = "Заголовок не может быть пустым.")
     private String title;
 
     @JsonProperty("type")
+    @NotNull(message = "Тип не может быть пустым.")
     private String type;
 
     @JsonProperty("source")
+    @NotNull
     private String source;
 
     @JsonProperty("columns")
+    @NotNull
     private Integer columns;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "section_element_props_id")
     private SectionElementProps props;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<BlockElement> children;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "layout_id")
     private Layout layout;
-
-    public BlockElement() {}
 
     public BlockElement(UUID id, String name, String title, String type, String source, Integer columns,
                         SectionElementProps props, List<BlockElement> children, Layout layout) {
@@ -60,78 +62,6 @@ public class BlockElement {
         this.columns = columns;
         this.props = props;
         this.children = children;
-        this.layout = layout;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    public Integer getColumns() {
-        return columns;
-    }
-
-    public void setColumns(Integer columns) {
-        this.columns = columns;
-    }
-
-    public SectionElementProps getProps() {
-        return props;
-    }
-
-    public void setProps(SectionElementProps props) {
-        this.props = props;
-    }
-
-    public List<BlockElement> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<BlockElement> children) {
-        this.children = children;
-    }
-
-    public Layout getLayout() {
-        return layout;
-    }
-
-    public void setLayout(Layout layout) {
         this.layout = layout;
     }
 

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import webapp.resumegenerator.domain.model.BlockElement;
 import webapp.resumegenerator.domain.model.Layout;
-import webapp.resumegenerator.domain.SectionElementProps;
+import webapp.resumegenerator.domain.model.SectionElementProps;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
