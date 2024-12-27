@@ -1,4 +1,4 @@
-package ru.kata.project.resumegenerator;
+package webapp.resumegenerator;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

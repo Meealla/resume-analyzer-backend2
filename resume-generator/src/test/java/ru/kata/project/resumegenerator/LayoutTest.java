@@ -31,11 +31,11 @@ public class LayoutTest {
         assertEquals(layout.getMinH(), deserializedLayout.getMinH());
         assertEquals(layout.getMaxH(), deserializedLayout.getMaxH());
         assertEquals(layout.getMoved(), deserializedLayout.getMoved());
-        assertEquals(layout.getIsStatic(), deserializedLayout.getIsStatic());
-        assertEquals(layout.getIsDraggable(), deserializedLayout.getIsDraggable());
-        assertEquals(layout.getIsResizable(), deserializedLayout.getIsResizable());
+        assertEquals(layout.getStatic(), deserializedLayout.getStatic());
+        assertEquals(layout.getDraggable(), deserializedLayout.getDraggable());
+        assertEquals(layout.getResizable(), deserializedLayout.getResizable());
         assertEquals(layout.getResizeHandles(), deserializedLayout.getResizeHandles());
-        assertEquals(layout.getIsBounded(), deserializedLayout.getIsBounded());
+        assertEquals(layout.getBounded(), deserializedLayout.getBounded());
     }
 
     @Test
@@ -55,11 +55,11 @@ public class LayoutTest {
         assertNull(deserializedLayout.getMinH());
         assertNull(deserializedLayout.getMaxH());
         assertNull(deserializedLayout.getMoved());
-        assertNull(deserializedLayout.getIsStatic());
-        assertNull(deserializedLayout.getIsDraggable());
-        assertNull(deserializedLayout.getIsResizable());
+        assertNull(deserializedLayout.getStatic());
+        assertNull(deserializedLayout.getDraggable());
+        assertNull(deserializedLayout.getResizable());
         assertNull(deserializedLayout.getResizeHandles());
-        assertNull(deserializedLayout.getIsBounded());
+        assertNull(deserializedLayout.getBounded());
     }
 
     private Layout createSampleLayout() {
