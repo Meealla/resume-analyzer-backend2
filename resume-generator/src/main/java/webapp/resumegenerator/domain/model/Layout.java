@@ -1,8 +1,11 @@
-package webapp.resumegenerator.domain;
+package webapp.resumegenerator.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+import jakarta.persistence.ElementCollection;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -12,12 +15,12 @@ import java.util.UUID;
  * @version 1.0.0
  * Данные для позиционирования блоков на странице.
  */
-@Entity
+@Document(collection = "layouts") // Указывает, что класс представляет коллекцию в MongoDB
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Layout {
+
     @Id
-    @GeneratedValue
-    private UUID id;
+    private UUID id; // MongoDB использует это поле как уникальный идентификатор
 
     @JsonProperty("i")
     private String i;
@@ -69,7 +72,7 @@ public class Layout {
 
     public Layout(UUID id, String i, int x, int y, int w, int h, Integer minW, Integer maxW, Integer minH,
                   Integer maxH, Boolean moved, Boolean isStatic, Boolean isDraggable, Boolean isResizable,
-            List<String> resizeHandles, Boolean isBounded) {
+                  List<String> resizeHandles, Boolean isBounded) {
         this.id = id;
         this.i = i;
         this.x = x;

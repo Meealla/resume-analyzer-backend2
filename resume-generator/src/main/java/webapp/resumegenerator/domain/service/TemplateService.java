@@ -1,5 +1,7 @@
 package webapp.resumegenerator.domain.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import webapp.resumegenerator.domain.model.Template;
 import java.time.LocalDate;
 import java.util.List;
@@ -82,5 +84,13 @@ public interface TemplateService {
      * @return Возвращает новую версию шаблона.
      */
     Template createNewTemplateVersion(Template template);
+
+    /**
+     * Получение всех шаблонов с пагинацией.
+     *
+     * @param pageable параметры пагинации.
+     * @return Экземпляр с шаблонами.
+     */
+    Page<Template> getAllTemplates(Pageable pageable);
 
 }

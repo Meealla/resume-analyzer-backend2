@@ -1,5 +1,7 @@
 package webapp.resumegenerator.application.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import webapp.resumegenerator.domain.model.Template;
 import webapp.resumegenerator.domain.repository.TemplateRepository;
 import java.time.LocalDate;
@@ -10,7 +12,7 @@ import org.springframework.stereotype.Service;
 import webapp.resumegenerator.domain.service.TemplateService;
 
 /**
- * Сервис для работы с шаблонамми резюме.
+ * Сервис для работы с шаблонами резюме.
  * Данный класс представляет бизнес-логику для реализации CRUD- операций.
  */
 @Service
@@ -154,5 +156,15 @@ public class TemplateServiceImpl implements TemplateService {
         return newTemplate;
     }
 
+    /**
+     * Получение всех шаблонов с пагинацией.
+     *
+     * @param pageable параметры пагинации.
+     * @return Страница с шаблонами.
+     */
+    @Override
+    public Page<Template> getAllTemplates(Pageable pageable) {
+        return templateRepository.findAll(pageable);
+    }
 
 }

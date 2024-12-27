@@ -41,6 +41,10 @@ public class TemplateControllerTest {
      */
     @Mock
     private TemplateService templateService;
+    /**
+     * Экземпляр контроллера {@link TemplateController}, в который внедряется мокированный сервис.
+     * Сервис для работы с шаблонами.
+     */
 
     /**
      * Экземпляр контроллера {@link TemplateController}, в который внедряется мокированный сервис.

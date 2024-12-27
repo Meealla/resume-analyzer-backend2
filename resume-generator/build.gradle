@@ -4,7 +4,6 @@ plugins {
 	id 'io.spring.dependency-management' version '1.1.6'
 	id 'checkstyle'
 }
-
 group = 'ru.kata.project'
 version = '0.0.1-SNAPSHOT'
 
@@ -38,28 +37,49 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.1'
+	implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
 	implementation 'org.springframework.boot:spring-boot-starter-validation' // Для валидации данных
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// https://mvnrepository.com/artifact/com.puppycrawl.tools/checkstyle
+	implementation group: 'com.puppycrawl.tools', name: 'checkstyle', version: '10.20.2'
+	// https://mvnrepository.com/artifact/org.postgresql/postgresql
+	implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.4'
+	// https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core
+	implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.3.Final'
+	testImplementation 'com.h2database:h2'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	// https://mvnrepository.com/artifact/com.sourcemuse.gradle.plugin/gradle-mongo-plugin
+	implementation group: 'com.sourcemuse.gradle.plugin', name: 'gradle-mongo-plugin', version: '2.0.0'
+
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:3.4.0'
 	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.4.0'
 	implementation 'io.springfox:springfox-boot-starter:3.0.0'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.0'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	implementation 'org.projectlombok:lombok:1.18.36'
 	compileOnly 'org.projectlombok:lombok:1.18.36'
 	annotationProcessor 'org.projectlombok:lombok:1.18.36'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
+tasks.withType(Checkstyle) {
+	reports {
+		html.required = true
+		xml.required = false
+	}
 }
 checkstyle {
 	toolVersion '10.20.2'
-	configFile file("\\src\\main\\java\\config\\checkstyle\\checkstyle.xml ")
+	configFile file("\\src\\main\\java\\webapp\\resumegenerator\\config\\checkstyle\\checkstyle.xml ")
 	ignoreFailures = true
+	maxWarnings = 0
+	maxErrors = 0
 }
 checkstyleMain {
-	source ='src/main/java/'
+	source ='src/main/java'
 }
 checkstyleTest {
 	source ='src/test/java'
+}
+tasks.named('test') {
+	useJUnitPlatform()
 }

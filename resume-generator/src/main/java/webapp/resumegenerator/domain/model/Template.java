@@ -2,12 +2,14 @@ package webapp.resumegenerator.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.deser.std.UUIDDeserializer;
-import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
+
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,35 +33,37 @@ public class Template {
      * Уникальный идентификатор, генерируется при создании нового шаблона.
      */
     @Id
-    @JsonDeserialize(using = UUIDDeserializer.class)
+    @JsonSerialize(using = ToStringSerializer.class)
     private UUID id;
 
     /**
      * Название шаблона.
      * Не должно быть пустым.
      */
-    @NotBlank(message = "Название шаблона не может быть пустым")
+    @NotNull(message = "Имя шаблона не может быть пустым.")
+    @Size(min = 3, message = "Имя шаблона должно содержать 3 и более символов.")
     private String name;
 
     /**
      * Описание шаблона.
      * Не должно быть пустым.
      */
-    @NotBlank(message = "Описание шаблона не может быть пустым")
+    @NotNull(message = "Описание шаблона не может быть пустым.")
+    @Size(max = 500, message = "Содержание должно содержать не более 500 символов.")
     private String description;
 
     /**
      * Контент шаблона.
      * Не должен быть пустым.
      */
-    @NotBlank(message = "Контент шаблона не может быть пустым")
+    @NotNull(message = "Контент шаблона не может быть пустым")
     private String content;
 
     /**
      * Дата и время создания шаблона.
      * Устанавливается автоматически в момент создания шаблона.
      */
-    @NotBlank()
+    @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
 
@@ -67,7 +71,7 @@ public class Template {
      * Версия шаблона.
      * Устанавливается автоматически в момент создания шаблона.
      */
-    @NotBlank()
+    @NotNull()
     private Integer version;
 
 
@@ -97,13 +101,11 @@ public class Template {
         }
         Template template = (Template) o;
         return Objects.equals(id, template.id) &&
-                Objects.equals(name, template.name) &&
-                Objects.equals(description, template.description) &&
-                Objects.equals(content, template.content);
+          Objects.equals(name, template.name);
     }
 
     @Override
     public final int hashCode() {
-        return Objects.hash(id, name, description, content);
+        return Objects.hash(id, name);
     }
 }

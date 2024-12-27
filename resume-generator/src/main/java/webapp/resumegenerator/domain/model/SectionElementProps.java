@@ -1,10 +1,10 @@
-package webapp.resumegenerator.domain;
+package webapp.resumegenerator.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -13,11 +13,10 @@ import java.util.UUID;
  * @version 1.0.0
  *  Настройки для отображения каждого блока (стили, текстовые данные).
  */
-@Entity
+@Document(collection = "section_element_props")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SectionElementProps {
     @Id
-    @GeneratedValue
     private UUID id;
 
     @JsonProperty("key")
@@ -27,25 +26,28 @@ public class SectionElementProps {
     private String text;
 
     @JsonProperty("wrapperStyle")
-    private String wrapperStyle;
+    private Map<String, String> wrapperStyle;
 
     @JsonProperty("textStyle")
-    private String textStyle;
+    private Map<String, String> textStyle;
 
     @JsonProperty("inputStyle")
-    private String inputStyle;
+    private Map<String, String> inputStyle;
 
     @JsonProperty("url")
     private String url;
 
     @JsonProperty("style")
-    private String style;
+    private Map<String, String> style;
 
-    public SectionElementProps() { }
+    public SectionElementProps() {
+        this.id = UUID.randomUUID();
+    }
 
-    public SectionElementProps(UUID id, String key, String text, String wrapperStyle, String textStyle,
-                               String inputStyle, String url, String style) {
-        this.id = id;
+    public SectionElementProps(String key, String text, Map<String, String> wrapperStyle,
+                               Map<String, String> textStyle, Map<String, String> inputStyle,
+                               String url, Map<String, String> style) {
+        this.id = UUID.randomUUID();
         this.key = key;
         this.text = text;
         this.wrapperStyle = wrapperStyle;
@@ -79,27 +81,27 @@ public class SectionElementProps {
         this.text = text;
     }
 
-    public String getWrapperStyle() {
+    public Map<String, String> getWrapperStyle() {
         return wrapperStyle;
     }
 
-    public void setWrapperStyle(String wrapperStyle) {
+    public void setWrapperStyle(Map<String, String> wrapperStyle) {
         this.wrapperStyle = wrapperStyle;
     }
 
-    public String getTextStyle() {
+    public Map<String, String> getTextStyle() {
         return textStyle;
     }
 
-    public void setTextStyle(String textStyle) {
+    public void setTextStyle(Map<String, String> textStyle) {
         this.textStyle = textStyle;
     }
 
-    public String getInputStyle() {
+    public Map<String, String> getInputStyle() {
         return inputStyle;
     }
 
-    public void setInputStyle(String inputStyle) {
+    public void setInputStyle(Map<String, String> inputStyle) {
         this.inputStyle = inputStyle;
     }
 
@@ -111,11 +113,11 @@ public class SectionElementProps {
         this.url = url;
     }
 
-    public String getStyle() {
+    public Map<String, String> getStyle() {
         return style;
     }
 
-    public void setStyle(String style) {
+    public void setStyle(Map<String, String> style) {
         this.style = style;
     }
 

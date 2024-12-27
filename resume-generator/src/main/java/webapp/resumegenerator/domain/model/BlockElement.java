@@ -1,8 +1,11 @@
-package webapp.resumegenerator.domain;
+package webapp.resumegenerator.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -13,11 +16,11 @@ import java.util.UUID;
  * Основной класс, который описывает блоки в резюме.
  */
 @SuppressWarnings("checkstyle:SummaryJavadoc")
-@Entity
+@Document(collection = "block_elements")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class BlockElement {
+
     @Id
-    @GeneratedValue
     private UUID id;
 
     @JsonProperty("name")
@@ -35,22 +38,25 @@ public class BlockElement {
     @JsonProperty("columns")
     private Integer columns;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "section_element_props_id")
+    @DBRef
+    @JsonProperty("props")
     private SectionElementProps props;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @DBRef
+    @JsonProperty("children")
     private List<BlockElement> children;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "layout_id")
+    @DBRef
+    @JsonProperty("layout")
     private Layout layout;
 
-    public BlockElement() {}
+    public BlockElement() {
+        this.id = UUID.randomUUID();
+    }
 
-    public BlockElement(UUID id, String name, String title, String type, String source, Integer columns,
+    public BlockElement(String name, String title, String type, String source, Integer columns,
                         SectionElementProps props, List<BlockElement> children, Layout layout) {
-        this.id = id;
+        this.id = UUID.randomUUID();
         this.name = name;
         this.title = title;
         this.type = type;
