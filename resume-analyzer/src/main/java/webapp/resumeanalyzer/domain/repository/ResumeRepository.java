@@ -16,6 +16,6 @@ public interface ResumeRepository extends JpaRepository<Resume, UUID> {
 
     //метод для поиска по слову-фильтру
     @Query("SELECT DISTINCT r.id FROM Resume r " + "JOIN Experience e ON r.id = e.id WHERE "
-            + "(:keyword IS lower(r.experiences) LIKE lower(concat('%', :keyword,'%')))")
+            + ":keyword LIKE lower(r.experiences) OR :keyword LIKE lower(concat('%', :keyword,'%'))")
     List<Resume> findByKeywordIgnoreCase(@Param("keyword") String keyword);
 }
