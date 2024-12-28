@@ -1,15 +1,15 @@
 package webapp.resumeanalyzer;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import webapp.resumeanalyzer.domain.model.SocialLink;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,14 +24,19 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import webapp.resumeanalyzer.controller.SocialLinkTestController;
+import webapp.resumeanalyzer.domain.model.SocialLink;
 import webapp.resumeanalyzer.domain.service.SocialLinkService;
 
 /**
- * Тестовый класс для проверки функциональности {@link webapp.socialLinkanalyzer.controller.SocialLinkTestController}.
+ * Тестовый класс для проверки функциональности {@link SocialLinkTestController}.
  */
-@SpringBootTest(classes = ResumeAnalyzerApplication.class)
+@SpringBootTest(classes = ResumeAnalyzerApplicationTests.class)
 @AutoConfigureMockMvc
 public class TestForSocialLinkController {
+
+    private final String uriTemp = "/socialLinks";
+    private final UUID generatedId = UUID.randomUUID();
+    private final SocialLink testJson = new SocialLink(generatedId, "testLink", "testName");
 
     /**
      * Сервис для работы с шаблонами.
@@ -39,11 +44,10 @@ public class TestForSocialLinkController {
     @Mock
     private SocialLinkService socialLinkService;
     /**
-     * Экземпляр контроллера {@link webapp.socialLinkanalyzer.controller.SocialLinkTestController}, в который внедряется мокированный
-     * сервис.
+     * Экземпляр контроллера {@link SocialLinkTestController}, в который внедряется Mock сервис.
      */
     @InjectMocks
-    private webapp.socialLinkanalyzer.controller.SocialLinkTestController socialLinkTestController;
+    private SocialLinkTestController socialLinkTestController;
 
     /**
      * Объект для выполнения HTTP-запросов и проверки ответов контроллера.
@@ -64,35 +68,26 @@ public class TestForSocialLinkController {
      * @throws Exception Исключение, возникающее при выполнении запроса.
      */
     @Test
-    @DisplayName("/socialLinks/{id} возвращает ошибку,если шаблон не найден")
+    @DisplayName(uriTemp + "/{id} возвращает ошибку,если шаблон не найден")
     public void testGetSocialLink() throws Exception {
-        mockMvc.perform(get("/sociallinks/{id}", UUID.randomUUID()))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(get(uriTemp + "/{id}", generatedId)).andExpect(status().isNotFound());
     }
 
     /**
      * Тест на проверку, что POST-запрос создает новый шаблон и возвращает его с присвоенным ему
      * id.
      *
-     * @throws Exception исключение, возникающее при выполнении запрос.
+     * @throws Exception Исключение, возникающее при выполнении запроса.
      */
     @Test
     @DisplayName("Проверка что при создании нового шаблона возвращается созданный шаблон")
     public void testCreateSocialLink() throws Exception {
-        UUID generatedID = UUID.randomUUID();
-        SocialLink inputSocialLink = new SocialLink(generatedID, "link1", "name1");
-        SocialLink savedSocialLink = new SocialLink(generatedID, "link1", "name1");
+        String tempJson = new ObjectMapper().writeValueAsString(testJson);
+        when(socialLinkService.createSocialLink(any(SocialLink.class))).thenReturn(testJson);
 
-        when(socialLinkService.createSocialLink(any(SocialLink.class))).thenReturn(savedSocialLink);
-
-        mockMvc.perform(
-                        MockMvcRequestBuilders.post("/templates").contentType(MediaType.APPLICATION_JSON)
-                                .content(
-                                        "{\"link\":\"link1\", \"name\":\"name1\"}"))
-                .andExpect(status().isCreated()) // Expect 201 Created
-                .andExpect(jsonPath("$.id").value(generatedID.toString()))
-                .andExpect(jsonPath("$.link").value("link1"))
-                .andExpect(jsonPath("$.name").value("name1")).andDo(MockMvcResultHandlers.print());
+        mockMvc.perform(MockMvcRequestBuilders.post(uriTemp).contentType(MediaType.APPLICATION_JSON)
+                        .content(tempJson)).andExpect(status().isCreated()) // Expect 201 Created
+                .andExpect(content().json(tempJson)).andDo(MockMvcResultHandlers.print());
 
         verify(socialLinkService, times(1)).createSocialLink(any(SocialLink.class));
     }
@@ -100,12 +95,12 @@ public class TestForSocialLinkController {
     /**
      * Тест на проверку, что DELETE-запрос выполняется успешно, при удалении шаблона.
      *
-     * @throws Exception
+     * @throws Exception Исключение, возникающее при выполнении запроса.
      */
     @Test
     @DisplayName("Проверка что при удалении шаблона по id возвращается статус 204")
     public void testDeleteSocialLink() throws Exception {
-        mockMvc.perform(delete("/sociallinks/{id}", UUID.randomUUID()))
+        mockMvc.perform(delete(uriTemp + "/{id}", generatedId))
                 .andExpect(status().isNoContent());
     }
 }

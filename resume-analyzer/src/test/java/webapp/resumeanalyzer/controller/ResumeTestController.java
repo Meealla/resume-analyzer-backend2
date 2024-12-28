@@ -18,42 +18,49 @@ import webapp.resumeanalyzer.domain.model.Resume;
 import webapp.resumeanalyzer.domain.service.ResumeService;
 
 @RestController
-@RequestMapping("/hobbies")
+@RequestMapping("/resumes")
 public class ResumeTestController {
 
+    //сервис для выполнения бизнес-логики
     private final ResumeService resumeService;
 
+    //конструктор для внедрения зависимости
     @Autowired
     public ResumeTestController(ResumeService resumeService) {
         this.resumeService = resumeService;
     }
 
+    //метод для получения сущности по id
     @GetMapping("/{id}")
     public ResponseEntity<Resume> getResume(@PathVariable String id) {
-        Resume resume = resumeService.getResume(id);
+        Resume resume = resumeService.getResumeById(id);
         if (resume == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(resume);
     }
 
+    //метод для получения сущностей по слову-фильтру
     @GetMapping("/load")
     public List<Resume> loadResumeByNameFilter(@RequestParam String nameFilter) {
         return resumeService.loadResumeByNameFilter(nameFilter);
     }
 
+    //метод добавления новой сущности
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<Resume> createResume(@Valid @RequestBody Resume resume) {
         Resume savedResume = resumeService.createResume(resume);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedResume);
     }
 
+    //метод удаления сущности по id
     @DeleteMapping("/{id}")
     public ResponseEntity<Resume> deleteResume(@PathVariable String id) {
         resumeService.deleteResume(id);
         return ResponseEntity.noContent().build();
     }
 
+    //метод обновления сущности
     @PutMapping
     public ResponseEntity<Resume> updateResume(@PathVariable String id,
             @Valid @RequestBody Resume resume) {

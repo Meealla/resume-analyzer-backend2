@@ -1,4 +1,4 @@
-package webapp.resumeanalyzer.infrastructure.repository;
+package webapp.resumeanalyzer.domain.repository;
 
 import java.util.List;
 import java.util.UUID;
@@ -8,9 +8,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import webapp.resumeanalyzer.domain.model.Resume;
 
+/**
+ * Интерфейс репозитория для выполнения CRUD-операций для сущности Resume в БД.
+ */
 @Repository
-public interface ResumeRepositoryImpl extends JpaRepository<Resume, UUID> {
+public interface ResumeRepository extends JpaRepository<Resume, UUID> {
 
+    //метод для поиска по слову-фильтру
     @Query("SELECT DISTINCT r.id FROM Resume r " + "JOIN Experience e ON r.id = e.id WHERE "
             + "(:keyword IS lower(r.experiences) LIKE lower(concat('%', :keyword,'%')))")
     List<Resume> findByKeywordIgnoreCase(@Param("keyword") String keyword);

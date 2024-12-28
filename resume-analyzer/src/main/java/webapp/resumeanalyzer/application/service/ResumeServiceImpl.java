@@ -4,18 +4,26 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import webapp.resumeanalyzer.domain.model.Resume;
+import webapp.resumeanalyzer.domain.repository.ResumeRepository;
 import webapp.resumeanalyzer.domain.service.ResumeService;
-import webapp.resumeanalyzer.infrastructure.repository.ResumeRepositoryImpl;
 
+/**
+ * Сервис CRUD методов сущности Resume.
+ */
 @Service
 public class ResumeServiceImpl implements ResumeService {
 
-    private final ResumeRepositoryImpl resumeRepositoryImpl;
+    private final ResumeRepository resumeRepository;
 
-    public ResumeServiceImpl(ResumeRepositoryImpl resumeRepositoryImpl) {
-        this.resumeRepositoryImpl = resumeRepositoryImpl;
+    /**
+     * Метод для внедрения зависимостей.
+     */
+    @Autowired
+    public ResumeServiceImpl(ResumeRepository resumeRepository) {
+        this.resumeRepository = resumeRepository;
     }
 
     @Transactional
@@ -26,45 +34,45 @@ public class ResumeServiceImpl implements ResumeService {
             throw new IllegalArgumentException(
                     "Full_name or PersonalData cannot be null or empty.");
         }
-        return resumeRepositoryImpl.save(resume);
+        return resumeRepository.save(resume);
     }
 
     @Transactional
     @Override
     public Resume updateResume(String id, Resume resume) {
-        UUID uuid = generateUUID(id);
+        UUID uuid = generateUuid(id);
         resume.setId(uuid);
-        Optional<Resume> existingResume = resumeRepositoryImpl.findById(uuid);
+        Optional<Resume> existingResume = resumeRepository.findById(uuid);
         if (existingResume.isEmpty()) {
             throw new IllegalArgumentException("Resume with uuid " + uuid + " not found.");
         }
-        return resumeRepositoryImpl.save(resume);
+        return resumeRepository.save(resume);
     }
 
     @Transactional
     @Override
     public void deleteResume(String id) {
-        UUID uuid = generateUUID(id);
-        resumeRepositoryImpl.deleteById(uuid);
+        UUID uuid = generateUuid(id);
+        resumeRepository.deleteById(uuid);
     }
 
     @Override
     public List<Resume> loadResumeByNameFilter(String resumeFilter) {
         if (resumeFilter == null || resumeFilter.isEmpty()) {
-            return resumeRepositoryImpl.findAll();
+            return resumeRepository.findAll();
         } else {
-            return resumeRepositoryImpl.findByKeywordIgnoreCase(resumeFilter);
+            return resumeRepository.findByKeywordIgnoreCase(resumeFilter);
         }
     }
 
     @Override
-    public Resume getResume(String id) {
-        UUID uuid = generateUUID(id);
-        return resumeRepositoryImpl.findById(uuid).orElseThrow(
+    public Resume getResumeById(String id) {
+        UUID uuid = generateUuid(id);
+        return resumeRepository.findById(uuid).orElseThrow(
                 () -> new IllegalArgumentException("Resume with uuid " + uuid + " not found."));
     }
 
-    private UUID generateUUID(String id) {
+    private UUID generateUuid(String id) {
         return UUID.fromString(id);
     }
 }

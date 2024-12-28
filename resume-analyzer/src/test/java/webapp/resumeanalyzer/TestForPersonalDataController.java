@@ -1,15 +1,15 @@
 package webapp.resumeanalyzer;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import webapp.resumeanalyzer.domain.model.PersonalData;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,14 +24,20 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import webapp.resumeanalyzer.controller.PersonalDataTestController;
+import webapp.resumeanalyzer.domain.model.PersonalData;
 import webapp.resumeanalyzer.domain.service.PersonalDataService;
 
 /**
  * Тестовый класс для проверки функциональности {@link PersonalDataTestController}.
  */
-@SpringBootTest(classes = ResumeAnalyzerApplication.class)
+@SpringBootTest(classes = ResumeAnalyzerApplicationTests.class)
 @AutoConfigureMockMvc
 public class TestForPersonalDataController {
+
+    private final String uriTemp = "/personalData";
+    private final UUID generatedId = UUID.randomUUID();
+    private final PersonalData testJson = new PersonalData(generatedId, "testFullName",
+            "testAddress", "testBio", "testPosition", 1000L, "testWebsite", "test@mail.com");
 
     /**
      * Сервис для работы с шаблонами.
@@ -39,8 +45,7 @@ public class TestForPersonalDataController {
     @Mock
     private PersonalDataService personalDataService;
     /**
-     * Экземпляр контроллера {@link PersonalDataTestController}, в который внедряется мокированный
-     * сервис.
+     * Экземпляр контроллера {@link PersonalDataTestController}, в который внедряется Mock сервис.
      */
     @InjectMocks
     private PersonalDataTestController personalDataTestController;
@@ -64,41 +69,26 @@ public class TestForPersonalDataController {
      * @throws Exception Исключение, возникающее при выполнении запроса.
      */
     @Test
-    @DisplayName("/personalData/{id} возвращает ошибку,если шаблон не найден")
+    @DisplayName(uriTemp + "/{id} возвращает ошибку,если шаблон не найден")
     public void testGetPersonalData() throws Exception {
-        mockMvc.perform(get("/personalData/{id}", UUID.randomUUID()))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(get(uriTemp + "/{id}", generatedId)).andExpect(status().isNotFound());
     }
 
     /**
      * Тест на проверку, что POST-запрос создает новый шаблон и возвращает его с присвоенным ему
      * id.
      *
-     * @throws Exception исключение, возникающее при выполнении запрос.
+     * @throws Exception Исключение, возникающее при выполнении запроса.
      */
     @Test
     @DisplayName("Проверка что при создании нового шаблона возвращается созданный шаблон")
     public void testCreatePersonalData() throws Exception {
-        UUID generatedID = UUID.randomUUID();
-        PersonalData inputPersonalData = new PersonalData(generatedID, "fullName1", "adress1",
-                "bio1", "position1", 100L, "website1", "mail");
-        PersonalData savedPersonalData = new PersonalData(generatedID, "fullName1", "adress1",
-                "bio1", "position1", 100L, "website1", "mail");
+        String tempJson = new ObjectMapper().writeValueAsString(testJson);
+        when(personalDataService.createPersonalData(any(PersonalData.class))).thenReturn(testJson);
 
-        when(personalDataService.createPersonalData(any(PersonalData.class))).thenReturn(
-                savedPersonalData);
-
-        mockMvc.perform(
-                        MockMvcRequestBuilders.post("/templates").contentType(MediaType.APPLICATION_JSON)
-                                .content(
-                                        "{\"fullName\":\"fullName1\",\"adress\":\"adress1\",\"bio\":\"bio1\",\"position\":\"position1\",\"phone\":\"100L\",\"website\":\"website1\",\"mail\":\"mail1\"}"))
-                .andExpect(status().isCreated()) // Expect 201 Created
-                .andExpect(jsonPath("$.id").value(generatedID.toString()))
-                .andExpect(jsonPath("$.description").value("description1"))
-                .andExpect(jsonPath("$.position").value("position1"))
-                .andExpect(jsonPath("$.from_year").value("from_year1"))
-                .andExpect(jsonPath("$.to_year").value("to_year1"))
-                .andExpect(jsonPath("$.name").value("name1")).andDo(MockMvcResultHandlers.print());
+        mockMvc.perform(MockMvcRequestBuilders.post(uriTemp).contentType(MediaType.APPLICATION_JSON)
+                        .content(tempJson)).andExpect(status().isCreated()) // Expect 201 Created
+                .andExpect(content().json(tempJson)).andDo(MockMvcResultHandlers.print());
 
         verify(personalDataService, times(1)).createPersonalData(any(PersonalData.class));
     }
@@ -106,12 +96,11 @@ public class TestForPersonalDataController {
     /**
      * Тест на проверку, что DELETE-запрос выполняется успешно, при удалении шаблона.
      *
-     * @throws Exception
+     * @throws Exception Исключение, возникающее при выполнении запроса.
      */
     @Test
     @DisplayName("Проверка что при удалении шаблона по id возвращается статус 204")
     public void testDeletePersonalData() throws Exception {
-        mockMvc.perform(delete("/personalData/{id}", UUID.randomUUID()))
-                .andExpect(status().isNoContent());
+        mockMvc.perform(delete(uriTemp + "/{id}", generatedId)).andExpect(status().isNoContent());
     }
 }

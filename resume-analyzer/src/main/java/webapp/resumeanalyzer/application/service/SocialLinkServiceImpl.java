@@ -4,18 +4,26 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import webapp.resumeanalyzer.domain.model.SocialLink;
+import webapp.resumeanalyzer.domain.repository.SocialLinkRepository;
 import webapp.resumeanalyzer.domain.service.SocialLinkService;
-import webapp.resumeanalyzer.infrastructure.repository.SocialLinkRepositoryImpl;
 
+/**
+ * Сервис CRUD методов сущности SocialLink.
+ */
 @Service
 public class SocialLinkServiceImpl implements SocialLinkService {
 
-    private final SocialLinkRepositoryImpl socialLinkRepositoryImpl;
+    private final SocialLinkRepository socialLinkRepository;
 
-    public SocialLinkServiceImpl(SocialLinkRepositoryImpl socialLinkRepositoryImpl) {
-        this.socialLinkRepositoryImpl = socialLinkRepositoryImpl;
+    /**
+     * Метод для внедрения зависимостей.
+     */
+    @Autowired
+    public SocialLinkServiceImpl(SocialLinkRepository socialLinkRepository) {
+        this.socialLinkRepository = socialLinkRepository;
     }
 
     @Transactional
@@ -24,45 +32,45 @@ public class SocialLinkServiceImpl implements SocialLinkService {
         if (socialLink.getName() == null || socialLink.getName().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be null or empty.");
         }
-        return socialLinkRepositoryImpl.save(socialLink);
+        return socialLinkRepository.save(socialLink);
     }
 
     @Transactional
     @Override
     public SocialLink updateSocialLink(String id, SocialLink socialLink) {
-        UUID uuid = generateUUID(id);
+        UUID uuid = generateUuid(id);
         socialLink.setId(uuid);
-        Optional<SocialLink> existingSocialLink = socialLinkRepositoryImpl.findById(uuid);
+        Optional<SocialLink> existingSocialLink = socialLinkRepository.findById(uuid);
         if (existingSocialLink.isEmpty()) {
             throw new IllegalArgumentException("SocialLink with uuid " + uuid + " not found.");
         }
-        return socialLinkRepositoryImpl.save(socialLink);
+        return socialLinkRepository.save(socialLink);
     }
 
     @Transactional
     @Override
     public void deleteSocialLink(String id) {
-        UUID uuid = generateUUID(id);
-        socialLinkRepositoryImpl.deleteById(uuid);
+        UUID uuid = generateUuid(id);
+        socialLinkRepository.deleteById(uuid);
     }
 
     @Override
     public List<SocialLink> loadSocialLinkByNameFilter(String socialLinkFilter) {
         if (socialLinkFilter == null || socialLinkFilter.isEmpty()) {
-            return socialLinkRepositoryImpl.findAll();
+            return socialLinkRepository.findAll();
         } else {
-            return socialLinkRepositoryImpl.findAllByNameContainingIgnoreCase(socialLinkFilter);
+            return socialLinkRepository.findAllByNameContainingIgnoreCase(socialLinkFilter);
         }
     }
 
     @Override
     public SocialLink getSocialLink(String id) {
-        UUID uuid = generateUUID(id);
-        return socialLinkRepositoryImpl.findById(uuid).orElseThrow(
+        UUID uuid = generateUuid(id);
+        return socialLinkRepository.findById(uuid).orElseThrow(
                 () -> new IllegalArgumentException("SocialLink with uuid " + uuid + " not found."));
     }
 
-    private UUID generateUUID(String id) {
+    private UUID generateUuid(String id) {
         return UUID.fromString(id);
     }
 }

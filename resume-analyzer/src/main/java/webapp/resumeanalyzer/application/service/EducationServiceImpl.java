@@ -7,17 +7,24 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import webapp.resumeanalyzer.domain.model.Education;
+import webapp.resumeanalyzer.domain.repository.EducationRepository;
 import webapp.resumeanalyzer.domain.service.EducationService;
-import webapp.resumeanalyzer.infrastructure.repository.EducationRepositoryImpl;
 
+
+/**
+ * Сервис CRUD методов сущности Education.
+ */
 @Service
 public class EducationServiceImpl implements EducationService {
 
-    private final EducationRepositoryImpl educationRepositoryImpl;
+    private final EducationRepository educationRepository;
 
+    /**
+     * Метод для внедрения зависимостей.
+     */
     @Autowired
-    public EducationServiceImpl(EducationRepositoryImpl educationRepositoryImpl) {
-        this.educationRepositoryImpl = educationRepositoryImpl;
+    public EducationServiceImpl(EducationRepository educationRepository) {
+        this.educationRepository = educationRepository;
     }
 
     @Transactional
@@ -26,53 +33,56 @@ public class EducationServiceImpl implements EducationService {
         if (education.getName() == null || education.getName().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be null or empty.");
         }
-        if (Integer.parseInt(education.getFrom_year()) >= Integer.parseInt(
-                education.getTo_year())) {
+        if (compareFrom_yearAndTo_Year(education)) {
             throw new IllegalArgumentException("FromYear cannot be more than ToYear.");
         }
-        return educationRepositoryImpl.save(education);
+        return educationRepository.save(education);
     }
 
     @Transactional
     @Override
     public Education updateEducation(String id, Education education) {
-        UUID uuid = generateUUID(id);
+        UUID uuid = generateUuid(id);
         education.setId(uuid);
-        Optional<Education> existingEducation = educationRepositoryImpl.findById(uuid);
+        Optional<Education> existingEducation = educationRepository.findById(uuid);
         if (existingEducation.isEmpty()) {
             throw new IllegalArgumentException("Education with uuid " + uuid + " not found.");
         }
-        if (Integer.parseInt(education.getFrom_year()) >= Integer.parseInt(
-                education.getTo_year())) {
+        if (compareFrom_yearAndTo_Year(education)) {
             throw new IllegalArgumentException("FromYear cannot be more than ToYear.");
         }
-        return educationRepositoryImpl.save(education);
+        return educationRepository.save(education);
     }
 
     @Transactional
     @Override
     public void deleteEducation(String id) {
-        UUID uuid = generateUUID(id);
-        educationRepositoryImpl.deleteById(uuid);
+        UUID uuid = generateUuid(id);
+        educationRepository.deleteById(uuid);
     }
 
     @Override
     public List<Education> loadEducationByNameFilter(String nameFilter) {
         if (nameFilter == null || nameFilter.isEmpty()) {
-            return educationRepositoryImpl.findAll();
+            return educationRepository.findAll();
         } else {
-            return educationRepositoryImpl.findAllByNameContainingIgnoreCase(nameFilter);
+            return educationRepository.findAllByNameContainingIgnoreCase(nameFilter);
         }
     }
 
     @Override
-    public Education getEducation(String id) {
-        UUID uuid = generateUUID(id);
-        return educationRepositoryImpl.findById(uuid).orElseThrow(
+    public Education getEducationById(String id) {
+        UUID uuid = generateUuid(id);
+        return educationRepository.findById(uuid).orElseThrow(
                 () -> new IllegalArgumentException("Education with uuid " + uuid + " not found."));
     }
 
-    private UUID generateUUID(String id) {
+    private UUID generateUuid(String id) {
         return UUID.fromString(id);
+    }
+
+    private boolean compareFrom_yearAndTo_Year(Education education) {
+        return Integer.parseInt(education.getFrom_year()) >= Integer.parseInt(
+                education.getTo_year());
     }
 }

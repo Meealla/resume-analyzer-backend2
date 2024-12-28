@@ -1,4 +1,4 @@
-package webapp.socialLinkanalyzer.controller;
+package webapp.resumeanalyzer.controller;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -17,17 +17,23 @@ import org.springframework.web.bind.annotation.RestController;
 import webapp.resumeanalyzer.domain.model.SocialLink;
 import webapp.resumeanalyzer.domain.service.SocialLinkService;
 
+/**
+ * Тестовый класс для проверки функциональности SocialLink.
+ */
 @RestController
-@RequestMapping("/sociallinks")
+@RequestMapping("/socialLinks")
 public class SocialLinkTestController {
 
+    //сервис для выполнения бизнес-логики
     private final SocialLinkService socialLinkService;
 
+    //конструктор для внедрения зависимости
     @Autowired
     public SocialLinkTestController(SocialLinkService socialLinkService) {
         this.socialLinkService = socialLinkService;
     }
 
+    //метод для получения сущности по id
     @GetMapping("/{id}")
     public ResponseEntity<SocialLink> getSocialLink(@PathVariable String id) {
         SocialLink socialLink = socialLinkService.getSocialLink(id);
@@ -37,23 +43,27 @@ public class SocialLinkTestController {
         return ResponseEntity.ok(socialLink);
     }
 
+    //метод для получения сущностей по слову-фильтру
     @GetMapping("/load")
     public List<SocialLink> loadSocialLinkByNameFilter(@RequestParam String nameFilter) {
         return socialLinkService.loadSocialLinkByNameFilter(nameFilter);
     }
 
+    //метод добавления новой сущности
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<SocialLink> createSocialLink(@Valid @RequestBody SocialLink socialLink) {
         SocialLink savedSocialLink = socialLinkService.createSocialLink(socialLink);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedSocialLink);
     }
 
+    //метод удаления сущности по id
     @DeleteMapping("/{id}")
     public ResponseEntity<SocialLink> deleteSocialLink(@PathVariable String id) {
         socialLinkService.deleteSocialLink(id);
         return ResponseEntity.noContent().build();
     }
 
+    //метод обновления сущности
     @PutMapping
     public ResponseEntity<SocialLink> updateSocialLink(@PathVariable String id,
             @Valid @RequestBody SocialLink socialLink) {

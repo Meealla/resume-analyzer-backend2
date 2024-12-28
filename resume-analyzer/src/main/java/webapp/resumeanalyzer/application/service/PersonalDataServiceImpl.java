@@ -4,18 +4,26 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import webapp.resumeanalyzer.domain.model.PersonalData;
+import webapp.resumeanalyzer.domain.repository.PersonalDataRepository;
 import webapp.resumeanalyzer.domain.service.PersonalDataService;
-import webapp.resumeanalyzer.infrastructure.repository.PersonalDataRepositoryImpl;
 
+/**
+ * Сервис CRUD методов сущности PersonalData.
+ */
 @Service
 public class PersonalDataServiceImpl implements PersonalDataService {
 
-    private final PersonalDataRepositoryImpl personalDataRepositoryImpl;
+    private final PersonalDataRepository personalDataRepository;
 
-    public PersonalDataServiceImpl(PersonalDataRepositoryImpl personalDataRepositoryImpl) {
-        this.personalDataRepositoryImpl = personalDataRepositoryImpl;
+    /**
+     * Метод для внедрения зависимостей.
+     */
+    @Autowired
+    public PersonalDataServiceImpl(PersonalDataRepository personalDataRepository) {
+        this.personalDataRepository = personalDataRepository;
     }
 
     @Transactional
@@ -24,47 +32,47 @@ public class PersonalDataServiceImpl implements PersonalDataService {
         if (personalData.getFull_name() == null || personalData.getFull_name().isEmpty()) {
             throw new IllegalArgumentException("Full_name cannot be null or empty.");
         }
-        return personalDataRepositoryImpl.save(personalData);
+        return personalDataRepository.save(personalData);
     }
 
     @Transactional
     @Override
     public PersonalData updatePersonalData(String id, PersonalData personalData) {
-        UUID uuid = generateUUID(id);
+        UUID uuid = generateUuid(id);
         personalData.setId(uuid);
-        Optional<PersonalData> existingPersonalData = personalDataRepositoryImpl.findById(uuid);
+        Optional<PersonalData> existingPersonalData = personalDataRepository.findById(uuid);
         if (existingPersonalData.isEmpty()) {
             throw new IllegalArgumentException("PersonalData with uuid " + uuid + " not found.");
         }
-        return personalDataRepositoryImpl.save(personalData);
+        return personalDataRepository.save(personalData);
     }
 
     @Transactional
     @Override
     public void deletePersonalData(String id) {
-        UUID uuid = generateUUID(id);
-        personalDataRepositoryImpl.deleteById(uuid);
+        UUID uuid = generateUuid(id);
+        personalDataRepository.deleteById(uuid);
     }
 
     @Override
     public List<PersonalData> loadPersonalDataByNameFilter(String personalDataFilter) {
         if (personalDataFilter == null || personalDataFilter.isEmpty()) {
-            return personalDataRepositoryImpl.findAll();
+            return personalDataRepository.findAll();
         } else {
-            return personalDataRepositoryImpl.findAllByFull_nameContainingIgnoreCase(
+            return personalDataRepository.findAllByFull_nameContainingIgnoreCase(
                     personalDataFilter);
         }
     }
 
     @Override
-    public PersonalData getPersonalData(String id) {
-        UUID uuid = generateUUID(id);
-        return personalDataRepositoryImpl.findById(uuid).orElseThrow(
+    public PersonalData getPersonalDataById(String id) {
+        UUID uuid = generateUuid(id);
+        return personalDataRepository.findById(uuid).orElseThrow(
                 () -> new IllegalArgumentException(
                         "PersonalData with uuid " + uuid + " not found."));
     }
 
-    private UUID generateUUID(String id) {
+    private UUID generateUuid(String id) {
         return UUID.fromString(id);
     }
 }

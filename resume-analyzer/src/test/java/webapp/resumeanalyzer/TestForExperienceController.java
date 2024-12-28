@@ -1,15 +1,15 @@
 package webapp.resumeanalyzer;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import webapp.resumeanalyzer.domain.model.Experience;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,14 +24,20 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import webapp.resumeanalyzer.controller.ExperienceTestController;
+import webapp.resumeanalyzer.domain.model.Experience;
 import webapp.resumeanalyzer.domain.service.ExperienceService;
 
 /**
  * Тестовый класс для проверки функциональности {@link ExperienceTestController}.
  */
-@SpringBootTest(classes = ResumeAnalyzerApplication.class)
+@SpringBootTest(classes = ResumeAnalyzerApplicationTests.class)
 @AutoConfigureMockMvc
 public class TestForExperienceController {
+
+    private final String uriTemp = "/experiences";
+    private final UUID generatedId = UUID.randomUUID();
+    private final Experience testJson = new Experience(generatedId, "testDescription",
+            "testPosition", "testFromYear", "testToYear", "TestName");
 
     /**
      * Сервис для работы с шаблонами.
@@ -39,8 +45,7 @@ public class TestForExperienceController {
     @Mock
     private ExperienceService experienceService;
     /**
-     * Экземпляр контроллера {@link ExperienceTestController}, в который внедряется мокированный
-     * сервис.
+     * Экземпляр контроллера {@link ExperienceTestController}, в который внедряется Mock сервис.
      */
     @InjectMocks
     private ExperienceTestController experienceTestController;
@@ -64,40 +69,27 @@ public class TestForExperienceController {
      * @throws Exception Исключение, возникающее при выполнении запроса.
      */
     @Test
-    @DisplayName("/experiences/{id} возвращает ошибку,если шаблон не найден")
+    @DisplayName(uriTemp + "/{id} возвращает ошибку,если шаблон не найден")
     public void testGetExperience() throws Exception {
-        mockMvc.perform(get("/experiences/{id}", UUID.randomUUID()))
-                .andExpect(status().isNotFound());
+        mockMvc.perform(get(uriTemp + "/{id}", generatedId)).andExpect(status().isNotFound());
     }
 
     /**
      * Тест на проверку, что POST-запрос создает новый шаблон и возвращает его с присвоенным ему
      * id.
      *
-     * @throws Exception исключение, возникающее при выполнении запрос.
+     * @throws Exception Исключение, возникающее при выполнении запроса.
      */
     @Test
     @DisplayName("Проверка что при создании нового шаблона возвращается созданный шаблон")
     public void testCreateExperience() throws Exception {
-        UUID generatedID = UUID.randomUUID();
-        Experience inputExperience = new Experience(generatedID, "description1", "position1",
-                "from_year1", "to_year1", "name1");
-        Experience savedExperience = new Experience(generatedID, "description1", "position1",
-                "from_year1", "to_year1", "name1");
+        String tempJson = new ObjectMapper().writeValueAsString(testJson);
 
-        when(experienceService.createExperience(any(Experience.class))).thenReturn(savedExperience);
+        when(experienceService.createExperience(any(Experience.class))).thenReturn(testJson);
 
-        mockMvc.perform(
-                        MockMvcRequestBuilders.post("/templates").contentType(MediaType.APPLICATION_JSON)
-                                .content(
-                                        "{\"description\":\"description1\",\"position\":\"position1\",\"from_year\":\"from_year1\",\"to_year\":\"to_year1\",\"name\":\"name1\"}"))
-                .andExpect(status().isCreated()) // Expect 201 Created
-                .andExpect(jsonPath("$.id").value(generatedID.toString()))
-                .andExpect(jsonPath("$.description").value("description1"))
-                .andExpect(jsonPath("$.position").value("position1"))
-                .andExpect(jsonPath("$.from_year").value("from_year1"))
-                .andExpect(jsonPath("$.to_year").value("to_year1"))
-                .andExpect(jsonPath("$.name").value("name1")).andDo(MockMvcResultHandlers.print());
+        mockMvc.perform(MockMvcRequestBuilders.post(uriTemp).contentType(MediaType.APPLICATION_JSON)
+                        .content(tempJson)).andExpect(status().isCreated()) // Expect 201 Created
+                .andExpect(content().json(tempJson)).andDo(MockMvcResultHandlers.print());
 
         verify(experienceService, times(1)).createExperience(any(Experience.class));
     }
@@ -105,12 +97,12 @@ public class TestForExperienceController {
     /**
      * Тест на проверку, что DELETE-запрос выполняется успешно, при удалении шаблона.
      *
-     * @throws Exception
+     * @throws Exception Исключение, возникающее при выполнении запроса.
      */
     @Test
     @DisplayName("Проверка что при удалении шаблона по id возвращается статус 204")
     public void testDeleteExperience() throws Exception {
-        mockMvc.perform(delete("/experiences/{id}", UUID.randomUUID()))
+        mockMvc.perform(delete(uriTemp + "/{id}", generatedId))
                 .andExpect(status().isNoContent());
     }
 }

@@ -7,17 +7,23 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import webapp.resumeanalyzer.domain.model.Experience;
+import webapp.resumeanalyzer.domain.repository.ExperienceRepository;
 import webapp.resumeanalyzer.domain.service.ExperienceService;
-import webapp.resumeanalyzer.infrastructure.repository.ExperienceRepositoryImpl;
 
+/**
+ * Сервис CRUD методов сущности Experience.
+ */
 @Service
 public class ExperienceServiceImpl implements ExperienceService {
 
-    private final ExperienceRepositoryImpl experienceRepositoryImpl;
+    private final ExperienceRepository experienceRepository;
 
+    /**
+     * Метод для внедрения зависимостей.
+     */
     @Autowired
-    public ExperienceServiceImpl(ExperienceRepositoryImpl experienceRepositoryImpl) {
-        this.experienceRepositoryImpl = experienceRepositoryImpl;
+    public ExperienceServiceImpl(ExperienceRepository experienceRepository) {
+        this.experienceRepository = experienceRepository;
     }
 
     @Transactional
@@ -26,53 +32,56 @@ public class ExperienceServiceImpl implements ExperienceService {
         if (experience.getName() == null || experience.getName().isEmpty()) {
             throw new IllegalArgumentException("Name cannot be null or empty.");
         }
-        if (Integer.parseInt(experience.getFrom_year()) >= Integer.parseInt(
-                experience.getTo_year())) {
+        if (compareFrom_yearAndTo_Year(experience)) {
             throw new IllegalArgumentException("FromYear cannot be more than ToYear.");
         }
-        return experienceRepositoryImpl.save(experience);
+        return experienceRepository.save(experience);
     }
 
     @Transactional
     @Override
     public Experience updateExperience(String id, Experience experience) {
-        UUID uuid = generateUUID(id);
+        UUID uuid = generateUuid(id);
         experience.setId(uuid);
-        Optional<Experience> existingExperience = experienceRepositoryImpl.findById(uuid);
+        Optional<Experience> existingExperience = experienceRepository.findById(uuid);
         if (existingExperience.isEmpty()) {
             throw new IllegalArgumentException("Experience with uuid " + uuid + " not found.");
         }
-        if (Integer.parseInt(experience.getFrom_year()) >= Integer.parseInt(
-                experience.getTo_year())) {
+        if (compareFrom_yearAndTo_Year(experience)) {
             throw new IllegalArgumentException("FromYear cannot be more than ToYear.");
         }
-        return experienceRepositoryImpl.save(experience);
+        return experienceRepository.save(experience);
     }
 
     @Transactional
     @Override
     public void deleteExperience(String id) {
-        UUID uuid = generateUUID(id);
-        experienceRepositoryImpl.deleteById(uuid);
+        UUID uuid = generateUuid(id);
+        experienceRepository.deleteById(uuid);
     }
 
     @Override
     public List<Experience> loadExperienceByNameFilter(String nameFilter) {
         if (nameFilter == null || nameFilter.isEmpty()) {
-            return experienceRepositoryImpl.findAll();
+            return experienceRepository.findAll();
         } else {
-            return experienceRepositoryImpl.findAllByNameContainingIgnoreCase(nameFilter);
+            return experienceRepository.findAllByNameContainingIgnoreCase(nameFilter);
         }
     }
 
     @Override
-    public Experience getExperience(String id) {
-        UUID uuid = generateUUID(id);
-        return experienceRepositoryImpl.findById(uuid).orElseThrow(
+    public Experience getExperienceById(String id) {
+        UUID uuid = generateUuid(id);
+        return experienceRepository.findById(uuid).orElseThrow(
                 () -> new IllegalArgumentException("Experience with uuid " + uuid + " not found."));
     }
 
-    private UUID generateUUID(String id) {
+    private UUID generateUuid(String id) {
         return UUID.fromString(id);
+    }
+
+    private boolean compareFrom_yearAndTo_Year(Experience experience) {
+        return Integer.parseInt(experience.getFrom_year()) >= Integer.parseInt(
+                experience.getTo_year());
     }
 }

@@ -4,18 +4,27 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import webapp.resumeanalyzer.domain.model.Hobby;
+import webapp.resumeanalyzer.domain.repository.HobbyRepository;
 import webapp.resumeanalyzer.domain.service.HobbyService;
-import webapp.resumeanalyzer.infrastructure.repository.HobbyRepositoryImpl;
 
+
+/**
+ * Сервис CRUD методов сущности Hobby.
+ */
 @Service
 public class HobbyServiceImpl implements HobbyService {
 
-    private final HobbyRepositoryImpl hobbyRepositoryImpl;
+    private final HobbyRepository hobbyRepository;
 
-    public HobbyServiceImpl(HobbyRepositoryImpl hobbyRepositoryImpl) {
-        this.hobbyRepositoryImpl = hobbyRepositoryImpl;
+    /**
+     * Метод для внедрения зависимостей.
+     */
+    @Autowired
+    public HobbyServiceImpl(HobbyRepository hobbyRepository) {
+        this.hobbyRepository = hobbyRepository;
     }
 
     @Transactional
@@ -24,45 +33,45 @@ public class HobbyServiceImpl implements HobbyService {
         if (hobby.getHobby() == null || hobby.getHobby().isEmpty()) {
             throw new IllegalArgumentException("Hobby cannot be null or empty.");
         }
-        return hobbyRepositoryImpl.save(hobby);
+        return hobbyRepository.save(hobby);
     }
 
     @Transactional
     @Override
     public Hobby updateHobby(String id, Hobby hobby) {
-        UUID uuid = generateUUID(id);
+        UUID uuid = generateUuid(id);
         hobby.setId(uuid);
-        Optional<Hobby> existingHobby = hobbyRepositoryImpl.findById(uuid);
+        Optional<Hobby> existingHobby = hobbyRepository.findById(uuid);
         if (existingHobby.isEmpty()) {
             throw new IllegalArgumentException("Hobby with uuid " + uuid + " not found.");
         }
-        return hobbyRepositoryImpl.save(hobby);
+        return hobbyRepository.save(hobby);
     }
 
     @Transactional
     @Override
     public void deleteHobby(String id) {
-        UUID uuid = generateUUID(id);
-        hobbyRepositoryImpl.deleteById(uuid);
+        UUID uuid = generateUuid(id);
+        hobbyRepository.deleteById(uuid);
     }
 
     @Override
     public List<Hobby> loadHobbyByNameFilter(String hobbyFilter) {
         if (hobbyFilter == null || hobbyFilter.isEmpty()) {
-            return hobbyRepositoryImpl.findAll();
+            return hobbyRepository.findAll();
         } else {
-            return hobbyRepositoryImpl.findAllByHobbyContainingIgnoreCase(hobbyFilter);
+            return hobbyRepository.findAllByHobbyContainingIgnoreCase(hobbyFilter);
         }
     }
 
     @Override
-    public Hobby getHobby(String id) {
-        UUID uuid = generateUUID(id);
-        return hobbyRepositoryImpl.findById(uuid).orElseThrow(
+    public Hobby getHobbyById(String id) {
+        UUID uuid = generateUuid(id);
+        return hobbyRepository.findById(uuid).orElseThrow(
                 () -> new IllegalArgumentException("Hobby with uuid " + uuid + " not found."));
     }
 
-    private UUID generateUUID(String id) {
+    private UUID generateUuid(String id) {
         return UUID.fromString(id);
     }
 }
