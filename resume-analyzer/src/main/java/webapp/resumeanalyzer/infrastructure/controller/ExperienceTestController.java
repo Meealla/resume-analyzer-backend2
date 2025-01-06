@@ -1,4 +1,4 @@
-package webapp.resumeanalyzer.controller;
+package webapp.resumeanalyzer.infrastructure.controller;
 
 import jakarta.validation.Valid;
 import java.util.List;

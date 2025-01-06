@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import webapp.resumeanalyzer.controller.SocialLinkTestController;
+import webapp.resumeanalyzer.infrastructure.controller.SocialLinkTestController;
 import webapp.resumeanalyzer.domain.model.SocialLink;
 import webapp.resumeanalyzer.domain.service.SocialLinkService;
 

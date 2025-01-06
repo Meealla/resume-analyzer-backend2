@@ -1,4 +1,4 @@
-package webapp.resumeanalyzer.controller;
+package webapp.resumeanalyzer.infrastructure.controller;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -14,62 +14,63 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import webapp.resumeanalyzer.domain.model.SocialLink;
-import webapp.resumeanalyzer.domain.service.SocialLinkService;
+import webapp.resumeanalyzer.domain.model.PersonalData;
+import webapp.resumeanalyzer.domain.service.PersonalDataService;
 
 /**
- * Тестовый класс для проверки функциональности SocialLink.
+ * Тестовый класс для проверки функциональности PersonalData.
  */
 @RestController
-@RequestMapping("/socialLinks")
-public class SocialLinkTestController {
+@RequestMapping("/personalData")
+public class PersonalDataTestController {
 
     //сервис для выполнения бизнес-логики
-    private final SocialLinkService socialLinkService;
+    private final PersonalDataService personalDataService;
 
     //конструктор для внедрения зависимости
     @Autowired
-    public SocialLinkTestController(SocialLinkService socialLinkService) {
-        this.socialLinkService = socialLinkService;
+    public PersonalDataTestController(PersonalDataService personalDataService) {
+        this.personalDataService = personalDataService;
     }
 
     //метод для получения сущности по id
     @GetMapping("/{id}")
-    public ResponseEntity<SocialLink> getSocialLink(@PathVariable String id) {
-        SocialLink socialLink = socialLinkService.getSocialLink(id);
-        if (socialLink == null) {
+    public ResponseEntity<PersonalData> getPersonalData(@PathVariable String id) {
+        PersonalData personalData = personalDataService.getPersonalDataById(id);
+        if (personalData == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(socialLink);
+        return ResponseEntity.ok(personalData);
     }
 
     //метод для получения сущностей по слову-фильтру
     @GetMapping("/load")
-    public List<SocialLink> loadSocialLinkByNameFilter(@RequestParam String nameFilter) {
-        return socialLinkService.loadSocialLinkByNameFilter(nameFilter);
+    public List<PersonalData> loadPersonalDataByNameFilter(@RequestParam String nameFilter) {
+        return personalDataService.loadPersonalDataByNameFilter(nameFilter);
     }
 
     //метод добавления новой сущности
     @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<SocialLink> createSocialLink(@Valid @RequestBody SocialLink socialLink) {
-        SocialLink savedSocialLink = socialLinkService.createSocialLink(socialLink);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedSocialLink);
+    public ResponseEntity<PersonalData> createPersonalData(
+            @Valid @RequestBody PersonalData personalData) {
+        PersonalData savedPersonalData = personalDataService.createPersonalData(personalData);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedPersonalData);
     }
 
     //метод удаления сущности по id
     @DeleteMapping("/{id}")
-    public ResponseEntity<SocialLink> deleteSocialLink(@PathVariable String id) {
-        socialLinkService.deleteSocialLink(id);
+    public ResponseEntity<PersonalData> deletePersonalData(@PathVariable String id) {
+        personalDataService.deletePersonalData(id);
         return ResponseEntity.noContent().build();
     }
 
     //метод обновления сущности
     @PutMapping
-    public ResponseEntity<SocialLink> updateSocialLink(@PathVariable String id,
-            @Valid @RequestBody SocialLink socialLink) {
+    public ResponseEntity<PersonalData> updatePersonalData(@PathVariable String id,
+            @Valid @RequestBody PersonalData personalData) {
         try {
-            socialLinkService.updateSocialLink(id, socialLink);
-            return ResponseEntity.ok(socialLink);
+            personalDataService.updatePersonalData(id, personalData);
+            return ResponseEntity.ok(personalData);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }

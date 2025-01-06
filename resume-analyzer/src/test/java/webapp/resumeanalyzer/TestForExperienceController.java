@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import webapp.resumeanalyzer.controller.ExperienceTestController;
+import webapp.resumeanalyzer.infrastructure.controller.ExperienceTestController;
 import webapp.resumeanalyzer.domain.model.Experience;
 import webapp.resumeanalyzer.domain.service.ExperienceService;
 

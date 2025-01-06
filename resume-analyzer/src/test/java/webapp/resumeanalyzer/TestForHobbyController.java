@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import webapp.resumeanalyzer.controller.HobbyTestController;
+import webapp.resumeanalyzer.infrastructure.controller.HobbyTestController;
 import webapp.resumeanalyzer.domain.model.Hobby;
 import webapp.resumeanalyzer.domain.service.HobbyService;
 

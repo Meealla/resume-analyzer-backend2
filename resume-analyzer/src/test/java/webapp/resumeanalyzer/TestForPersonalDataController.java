@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import webapp.resumeanalyzer.controller.PersonalDataTestController;
+import webapp.resumeanalyzer.infrastructure.controller.PersonalDataTestController;
 import webapp.resumeanalyzer.domain.model.PersonalData;
 import webapp.resumeanalyzer.domain.service.PersonalDataService;
 
