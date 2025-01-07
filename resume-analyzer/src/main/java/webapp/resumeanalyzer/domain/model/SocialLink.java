@@ -1,4 +1,4 @@
-package webapp.resumeanalyzer.domain;
+package webapp.resumeanalyzer.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.Column;

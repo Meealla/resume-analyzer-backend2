@@ -10,12 +10,12 @@ import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webapp.resumeanalyzer.domain.Education;
-import webapp.resumeanalyzer.domain.Experience;
-import webapp.resumeanalyzer.domain.Hobby;
-import webapp.resumeanalyzer.domain.PersonalData;
-import webapp.resumeanalyzer.domain.Resume;
-import webapp.resumeanalyzer.domain.SocialLink;
+import webapp.resumeanalyzer.domain.model.Education;
+import webapp.resumeanalyzer.domain.model.Experience;
+import webapp.resumeanalyzer.domain.model.Hobby;
+import webapp.resumeanalyzer.domain.model.PersonalData;
+import webapp.resumeanalyzer.domain.model.Resume;
+import webapp.resumeanalyzer.domain.model.SocialLink;
 
 /**
  * Тест сериализации/десериализации JSON для сущности Resume.

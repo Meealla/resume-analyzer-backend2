@@ -1,6 +1,7 @@
-package webapp.resumeanalyzer.domain;
+package webapp.resumeanalyzer.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,24 +16,34 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * Сущность Hobby для хранения данных резюме в базе данных.
+ * Сущность Education для хранения данных резюме в базе данных.
  */
 @Entity
-@Table(name = "hobby")
+@Table(name = "education")
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Hobby {
+public class Education {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(unique = true)
     private UUID id;
 
-    private String hobby;
+    private String description;
+
+    private String position;
+
+    @JsonProperty("fromYear")
+    private String from_year;
+
+    @JsonProperty("toYear")
+    private String to_year;
+
+    private String name;
 
     @Override
     public boolean equals(Object o) {
@@ -43,8 +54,8 @@ public class Hobby {
             return false;
         }
 
-        Hobby hobby = (Hobby) o;
-        return id.equals(hobby.id);
+        Education education = (Education) o;
+        return id.equals(education.id);
     }
 
     @Override

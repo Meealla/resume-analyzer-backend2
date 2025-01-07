@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import webapp.resumeanalyzer.domain.Experience;
+import webapp.resumeanalyzer.domain.model.Experience;
 
 /**
  * Тест сериализации/десериализации JSON для сущности Experience.
