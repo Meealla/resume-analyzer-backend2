@@ -60,6 +60,8 @@ public class Resume {
     @JoinColumn(name = "hobby_id")
     private Set<Hobby> hobbies;
 
+    private Department department;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

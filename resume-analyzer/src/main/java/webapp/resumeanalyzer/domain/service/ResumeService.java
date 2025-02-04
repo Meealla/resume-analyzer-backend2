@@ -1,6 +1,8 @@
 package webapp.resumeanalyzer.domain.service;
 
 import java.util.List;
+
+import webapp.resumeanalyzer.domain.model.Department;
 import webapp.resumeanalyzer.domain.model.Resume;
 
 /**
@@ -22,4 +24,11 @@ public interface ResumeService {
 
     //получение по id
     Resume getResumeById(String id);
+
+    void deleteAll();
+
+    List<Resume> getAllResumes();
+
+    List<Resume> getAllResumesByDepartment(Department department);
+
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import webapp.resumeanalyzer.domain.model.Department;
 import webapp.resumeanalyzer.domain.model.Resume;
 import webapp.resumeanalyzer.domain.service.ResumeService;
 
@@ -44,6 +45,17 @@ public class ResumeTestController {
     @GetMapping("/load")
     public List<Resume> loadResumeByNameFilter(@RequestParam String nameFilter) {
         return resumeService.loadResumeByNameFilter(nameFilter);
+    }
+
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Resume>> getAllResume(
+            @RequestParam(value = "department", required = false) Department department) {
+        if (department == null) {
+            return ResponseEntity.ok(resumeService.getAllResumes());
+        } else {
+            return ResponseEntity.ok(resumeService.getAllResumesByDepartment(department));
+        }
     }
 
     //метод добавления новой сущности

@@ -74,6 +74,7 @@ public class Template {
     @NotNull()
     private Integer version;
 
+    private Department department;
 
     /**
      * Конструктор с параметрами для создания шаблона.
