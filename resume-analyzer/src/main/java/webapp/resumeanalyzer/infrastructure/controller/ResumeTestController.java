@@ -1,8 +1,12 @@
 package webapp.resumeanalyzer.infrastructure.controller;
 
 import jakarta.validation.Valid;
+
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -75,12 +79,23 @@ public class ResumeTestController {
     //метод обновления сущности
     @PutMapping
     public ResponseEntity<Resume> updateResume(@PathVariable String id,
-            @Valid @RequestBody Resume resume) {
+                                               @Valid @RequestBody Resume resume) {
         try {
             resumeService.updateResume(id, resume);
             return ResponseEntity.ok(resume);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<Resume>> searchResume(
+            @RequestParam String query,
+            Pageable pageable) {
+        if (query == null || query.trim().isEmpty() || query.length() > 255) {
+            return ResponseEntity.badRequest().build();
+        }
+        Page<Resume> resumes = resumeService.searchResumes(query, pageable);
+        return ResponseEntity.ok(resumes);
     }
 }

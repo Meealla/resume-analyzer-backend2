@@ -13,6 +13,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -44,19 +46,19 @@ public class Resume {
     @NotNull
     private PersonalData personalData;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "education_id")
     private Set<Education> educations;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "experience_id")
     private Set<Experience> experiences;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "socialLink_id")
     private Set<SocialLink> socialLinks;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "hobby_id")
     private Set<Hobby> hobbies;
 
@@ -64,15 +66,10 @@ public class Resume {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Resume resume = (Resume) o;
-        return id.equals(resume.id);
+        return Objects.equals(id, resume.id) && Objects.equals(personalData, resume.personalData) && Objects.equals(educations, resume.educations) && Objects.equals(experiences, resume.experiences) && Objects.equals(socialLinks, resume.socialLinks) && Objects.equals(hobbies, resume.hobbies) && department == resume.department;
     }
 
     @Override

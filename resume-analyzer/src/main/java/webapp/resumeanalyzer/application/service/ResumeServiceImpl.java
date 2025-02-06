@@ -3,10 +3,14 @@ package webapp.resumeanalyzer.application.service;
 import jakarta.transaction.Transactional;
 
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import webapp.resumeanalyzer.domain.model.Department;
 import webapp.resumeanalyzer.domain.model.Resume;
@@ -77,6 +81,14 @@ public class ResumeServiceImpl implements ResumeService {
 
     private UUID generateUuid(String id) {
         return UUID.fromString(id);
+    }
+
+    @Override
+    public Page<Resume> searchResumes(String query, Pageable pageable) {
+        if (query == null || query.trim().isEmpty()) {
+            return Page.empty();
+        }
+        return resumeRepository.searchResumes(query.toLowerCase(), pageable);
     }
 
     @Transactional
