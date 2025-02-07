@@ -71,6 +71,9 @@ Resume Analyzer Backend — это набор микросервисов, кот
 5. **Документация API:**
     - После запуска API Gateway документация будет доступна по адресу: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html).
 
+6. **Запуск swagger-ui:**
+   - Для запуска swagger-ui, после запуска приложения перейдите по адресу: [http://localhost:8080/swagger-ui/index.html]
+7. 
 ## **Структура проекта**
 ```plaintext
 resume-analyzer-backend/
