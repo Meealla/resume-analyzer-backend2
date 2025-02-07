@@ -2,6 +2,7 @@ package webapp.resumegenerator.domain.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import webapp.resumegenerator.domain.model.Department;
 import webapp.resumegenerator.domain.model.Template;
 import java.time.LocalDate;
 import java.util.List;
@@ -92,5 +93,13 @@ public interface TemplateService {
      * @return Экземпляр с шаблонами.
      */
     Page<Template> getAllTemplates(Pageable pageable);
+
+    /**
+     * Получение всех шаблонов с привязкой к департаменту
+     *
+     * @param department департамент к которому относится резюме.
+     * @return Экземпляр с шаблонами по принадлежности к департаменту.
+     */
+    List<Template> getAllTemplatesByDepartment(Department department);
 
 }

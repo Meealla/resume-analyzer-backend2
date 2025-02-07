@@ -2,6 +2,8 @@ package webapp.resumeanalyzer.application.service;
 
 import jakarta.transaction.Transactional;
 
+import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import webapp.resumeanalyzer.domain.model.Department;
 import webapp.resumeanalyzer.domain.model.Resume;
 import webapp.resumeanalyzer.domain.repository.ResumeRepository;
 import webapp.resumeanalyzer.domain.service.ResumeService;
@@ -87,4 +90,32 @@ public class ResumeServiceImpl implements ResumeService {
         }
         return resumeRepository.searchResumes(query.toLowerCase(), pageable);
     }
+
+    @Transactional
+    @Override
+    public void deleteAll() {
+        resumeRepository.deleteAll();
+    }
+
+    @Override
+    public List<Resume> getAllResumes() {
+        return resumeRepository.findAll();
+    }
+
+    @Transactional
+    @Override
+    public List<Resume> getAllResumesByDepartment(Department department) {
+        List<Resume> resumes = new ArrayList<>();
+
+        if (getAllResumes() != null) {
+            for (Resume resume : getAllResumes()) {
+                if (resume.getDepartment().equals(department)) {
+                    resumes.add(resume);
+                }
+            }
+        }
+
+        return resumes;
+    }
+
 }

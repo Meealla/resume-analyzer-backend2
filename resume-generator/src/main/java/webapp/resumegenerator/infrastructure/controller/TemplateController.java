@@ -1,6 +1,12 @@
 package webapp.resumegenerator.infrastructure.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import webapp.resumegenerator.domain.model.Department;
 import webapp.resumegenerator.domain.service.TemplateService;
 import webapp.resumegenerator.domain.model.Template;
 import java.time.LocalDate;
@@ -200,5 +206,20 @@ public class TemplateController {
             errors.put(fieldName, errorMessage);
         });
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @Operation(summary = "Загрузить все шаблоны",
+            description = "Возвращает список всех шаблонов или список всех шаблонов по принадлежности к отделу")
+    @ApiResponse(responseCode = "200", description = "Успешное выполнение запроса",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class)))
+    @GetMapping("/all")
+    public ResponseEntity<List<Template>> getAllTemplates(
+            @Parameter(description = "Идентификатор отдела к которому принадлежит резюме")
+            @RequestParam(value = "department", required = false) Department department) {
+        if (department == null) {
+            return ResponseEntity.ok(templateService.getAllTemplates());
+        } else {
+            return ResponseEntity.ok(templateService.getAllTemplatesByDepartment(department));
+        }
     }
 }

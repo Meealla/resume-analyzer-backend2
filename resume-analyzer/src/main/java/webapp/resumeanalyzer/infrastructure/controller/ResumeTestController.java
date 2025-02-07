@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import webapp.resumeanalyzer.domain.model.Department;
 import webapp.resumeanalyzer.domain.model.Resume;
 import webapp.resumeanalyzer.domain.service.ResumeService;
 
@@ -71,6 +72,18 @@ public class ResumeTestController {
     @ApiResponse(responseCode = "201", description = "Резюме успешно создано",
             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Resume.class)))
     @ApiResponse(responseCode = "400", description = "Некорректные данные для создания резюме")
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Resume>> getAllResume(
+            @RequestParam(value = "department", required = false) Department department) {
+        if (department == null) {
+            return ResponseEntity.ok(resumeService.getAllResumes());
+        } else {
+            return ResponseEntity.ok(resumeService.getAllResumesByDepartment(department));
+        }
+    }
+
+    //метод добавления новой сущности
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<Resume> createResume(@Valid @RequestBody Resume resume) {
         Resume savedResume = resumeService.createResume(resume);
@@ -84,10 +97,7 @@ public class ResumeTestController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Удалить резюме по ID",
-            description = "Удаляет резюме с указанным идентификатором.")
-    @ApiResponse(responseCode = "204", description = "Резюме успешно удалено")
-    @ApiResponse(responseCode = "404", description = "Резюме не найдено")
+    //метод обновления сущности
     @PutMapping
     public ResponseEntity<Resume> updateResume(@PathVariable String id,
                                                @Valid @RequestBody Resume resume) {
