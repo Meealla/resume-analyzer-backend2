@@ -2,9 +2,11 @@ package webapp.resumegenerator.application.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import webapp.resumegenerator.domain.model.Department;
 import webapp.resumegenerator.domain.model.Template;
 import webapp.resumegenerator.domain.repository.TemplateRepository;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,4 +169,19 @@ public class TemplateServiceImpl implements TemplateService {
         return templateRepository.findAll(pageable);
     }
 
+
+    @Override
+    public List<Template> getAllTemplatesByDepartment(Department department) {
+        List<Template> templates = new ArrayList<>();
+
+        if (getAllTemplates() != null) {
+            for (Template template : getAllTemplates()) {
+                if (template.getDepartment().equals(department)) {
+                    templates.add(template);
+                }
+            }
+        }
+
+        return templates;
+    }
 }
