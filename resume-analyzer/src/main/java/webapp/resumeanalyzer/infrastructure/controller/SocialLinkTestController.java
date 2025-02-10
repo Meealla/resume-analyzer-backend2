@@ -1,5 +1,10 @@
 package webapp.resumeanalyzer.infrastructure.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +25,7 @@ import webapp.resumeanalyzer.domain.service.SocialLinkService;
 /**
  * Тестовый класс для проверки функциональности SocialLink.
  */
+@Tag(name = "SocialLink API", description = "Управление социальными ссылками")
 @RestController
 @RequestMapping("/socialLinks")
 public class SocialLinkTestController {
@@ -33,7 +39,11 @@ public class SocialLinkTestController {
         this.socialLinkService = socialLinkService;
     }
 
-    //метод для получения сущности по id
+    @Operation(summary = "Получить социальную ссылку по ID",
+            description = "Возвращает социальную ссылку по указанному идентификатору.")
+    @ApiResponse(responseCode = "200", description = "Ссылка найдена",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = SocialLink.class)))
+    @ApiResponse(responseCode = "404", description = "Ссылка не найдена")
     @GetMapping("/{id}")
     public ResponseEntity<SocialLink> getSocialLink(@PathVariable String id) {
         SocialLink socialLink = socialLinkService.getSocialLink(id);
@@ -43,27 +53,42 @@ public class SocialLinkTestController {
         return ResponseEntity.ok(socialLink);
     }
 
-    //метод для получения сущностей по слову-фильтру
+    @Operation(summary = "Загрузить социальные ссылки по фильтру",
+            description = "Возвращает список социальных ссылок, соответствующих указанному фильтру.")
+    @ApiResponse(responseCode = "200", description = "Успешное выполнение запроса",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class)))
     @GetMapping("/load")
     public List<SocialLink> loadSocialLinkByNameFilter(@RequestParam String nameFilter) {
         return socialLinkService.loadSocialLinkByNameFilter(nameFilter);
     }
 
-    //метод добавления новой сущности
+    @Operation(summary = "Создать новую социальную ссылку",
+            description = "Создает новую социальную ссылку и возвращает её.")
+    @ApiResponse(responseCode = "201", description = "Ссылка успешно создана",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = SocialLink.class)))
+    @ApiResponse(responseCode = "400", description = "Некорректные данные для создания ссылки")
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<SocialLink> createSocialLink(@Valid @RequestBody SocialLink socialLink) {
         SocialLink savedSocialLink = socialLinkService.createSocialLink(socialLink);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedSocialLink);
     }
 
-    //метод удаления сущности по id
+    @Operation(summary = "Удалить социальную ссылку по ID",
+            description = "Удаляет социальную ссылку с указанным идентификатором.")
+    @ApiResponse(responseCode = "204", description = "Ссылка успешно удалена")
+    @ApiResponse(responseCode = "404", description = "Ссылка не найдена")
     @DeleteMapping("/{id}")
     public ResponseEntity<SocialLink> deleteSocialLink(@PathVariable String id) {
         socialLinkService.deleteSocialLink(id);
         return ResponseEntity.noContent().build();
     }
 
-    //метод обновления сущности
+    @Operation(summary = "Обновить существующую социальную ссылку",
+            description = "Обновляет данные существующей социальной ссылки по указанному идентификатору.")
+    @ApiResponse(responseCode = "200", description = "Ссылка успешно обновлена",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = SocialLink.class)))
+    @ApiResponse(responseCode = "400", description = "Некорректные данные для обновления")
+    @ApiResponse(responseCode = "404", description = "Ссылка не найдена")
     @PutMapping
     public ResponseEntity<SocialLink> updateSocialLink(@PathVariable String id,
             @Valid @RequestBody SocialLink socialLink) {

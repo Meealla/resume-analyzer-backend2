@@ -1,5 +1,10 @@
 package webapp.resumeanalyzer.infrastructure.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +25,7 @@ import webapp.resumeanalyzer.domain.service.PersonalDataService;
 /**
  * Тестовый класс для проверки функциональности PersonalData.
  */
+@Tag(name = "PersonalData API", description = "Управление сущностями PersonalData")
 @RestController
 @RequestMapping("/personalData")
 public class PersonalDataTestController {
@@ -33,7 +39,11 @@ public class PersonalDataTestController {
         this.personalDataService = personalDataService;
     }
 
-    //метод для получения сущности по id
+    @Operation(summary = "Получить данные о персональной информации по ID",
+            description = "Возвращает данные о персональной информации по указанному идентификатору.")
+    @ApiResponse(responseCode = "200", description = "Персональная информация найдена",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = PersonalData.class)))
+    @ApiResponse(responseCode = "404", description = "Персональная информация не найдена")
     @GetMapping("/{id}")
     public ResponseEntity<PersonalData> getPersonalData(@PathVariable String id) {
         PersonalData personalData = personalDataService.getPersonalDataById(id);
@@ -43,13 +53,20 @@ public class PersonalDataTestController {
         return ResponseEntity.ok(personalData);
     }
 
-    //метод для получения сущностей по слову-фильтру
+    @Operation(summary = "Загрузить персональные данные по фильтру",
+            description = "Возвращает список персональных данных, соответствующих указанному фильтру по имени.")
+    @ApiResponse(responseCode = "200", description = "Успешное выполнение запроса",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class)))
     @GetMapping("/load")
     public List<PersonalData> loadPersonalDataByNameFilter(@RequestParam String nameFilter) {
         return personalDataService.loadPersonalDataByNameFilter(nameFilter);
     }
 
-    //метод добавления новой сущности
+    @Operation(summary = "Создать новую персональную информацию",
+            description = "Создает новую сущность персональной информации и возвращает её.")
+    @ApiResponse(responseCode = "201", description = "Персональная информация успешно создана",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = PersonalData.class)))
+    @ApiResponse(responseCode = "400", description = "Некорректные данные для создания сущности")
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<PersonalData> createPersonalData(
             @Valid @RequestBody PersonalData personalData) {
@@ -57,14 +74,22 @@ public class PersonalDataTestController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPersonalData);
     }
 
-    //метод удаления сущности по id
+    @Operation(summary = "Удалить персональную информацию по ID",
+            description = "Удаляет данные о персональной информации с указанным идентификатором.")
+    @ApiResponse(responseCode = "204", description = "Персональная информация успешно удалена")
+    @ApiResponse(responseCode = "404", description = "Персональная информация не найдена")
     @DeleteMapping("/{id}")
     public ResponseEntity<PersonalData> deletePersonalData(@PathVariable String id) {
         personalDataService.deletePersonalData(id);
         return ResponseEntity.noContent().build();
     }
 
-    //метод обновления сущности
+    @Operation(summary = "Обновить существующую персональную информацию",
+            description = "Обновляет данные существующей персональной информации по указанному идентификатору.")
+    @ApiResponse(responseCode = "200", description = "Персональная информация успешно обновлена",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = PersonalData.class)))
+    @ApiResponse(responseCode = "400", description = "Некорректные данные для обновления")
+    @ApiResponse(responseCode = "404", description = "Персональная информация не найдена")
     @PutMapping
     public ResponseEntity<PersonalData> updatePersonalData(@PathVariable String id,
             @Valid @RequestBody PersonalData personalData) {
