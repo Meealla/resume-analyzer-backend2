@@ -34,7 +34,6 @@ public interface ResumeService {
 
     List<Resume> getAllResumesByDepartment(Department department);
 
-
     //получение резюме по ключевым словам
     public Page<Resume> searchResumes(String query, Pageable pageable);
 }
