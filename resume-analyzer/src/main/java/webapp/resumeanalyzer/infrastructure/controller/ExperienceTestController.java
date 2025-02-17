@@ -1,5 +1,10 @@
 package webapp.resumeanalyzer.infrastructure.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +25,7 @@ import webapp.resumeanalyzer.domain.service.ExperienceService;
 /**
  * Тестовый класс для проверки функциональности Experience.
  */
+@Tag(name = "Experience API", description = "Управление сущностями Experience")
 @RestController
 @RequestMapping("/experiences")
 public class ExperienceTestController {
@@ -33,7 +39,11 @@ public class ExperienceTestController {
         this.experienceService = experienceService;
     }
 
-    //метод для получения сущности по id
+    @Operation(summary = "Получить сущность Experience по ID",
+            description = "Возвращает сущность Experience по указанному идентификатору.")
+    @ApiResponse(responseCode = "200", description = "Сущность найдена",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Experience.class)))
+    @ApiResponse(responseCode = "404", description = "Сущность не найдена")
     @GetMapping("/{id}")
     public ResponseEntity<Experience> getExperience(@PathVariable String id) {
         Experience experience = experienceService.getExperienceById(id);
@@ -43,27 +53,42 @@ public class ExperienceTestController {
         return ResponseEntity.ok(experience);
     }
 
-    //метод для получения сущностей по слову-фильтру
+    @Operation(summary = "Загрузить сущности Experience по фильтру",
+            description = "Возвращает список сущностей Experience, соответствующих указанному фильтру по имени.")
+    @ApiResponse(responseCode = "200", description = "Успешное выполнение",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = List.class)))
     @GetMapping("/load")
     public List<Experience> loadExperienceByNameFilter(@RequestParam String nameFilter) {
         return experienceService.loadExperienceByNameFilter(nameFilter);
     }
 
-    //метод добавления новой сущности
+    @Operation(summary = "Создать новую сущность Experience",
+            description = "Создает новую сущность Experience и возвращает её.")
+    @ApiResponse(responseCode = "201", description = "Сущность успешно создана",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Experience.class)))
+    @ApiResponse(responseCode = "400", description = "Некорректные данные для создания сущности")
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<Experience> createExperience(@Valid @RequestBody Experience experience) {
         Experience savedExperience = experienceService.createExperience(experience);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedExperience);
     }
 
-    //метод удаления сущности по id
+    @Operation(summary = "Удалить сущность Experience по ID",
+            description = "Удаляет сущность Experience с указанным идентификатором.")
+    @ApiResponse(responseCode = "204", description = "Сущность успешно удалена")
+    @ApiResponse(responseCode = "404", description = "Сущность не найдена")
     @DeleteMapping("/{id}")
     public ResponseEntity<Experience> deleteExperience(@PathVariable String id) {
         experienceService.deleteExperience(id);
         return ResponseEntity.noContent().build();
     }
 
-    //метод обновления сущности
+    @Operation(summary = "Обновить существующую сущность Experience",
+            description = "Обновляет данные сущности Experience с указанным идентификатором.")
+    @ApiResponse(responseCode = "200", description = "Сущность успешно обновлена",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Experience.class)))
+    @ApiResponse(responseCode = "400", description = "Некорректные данные для обновления")
+    @ApiResponse(responseCode = "404", description = "Сущность не найдена")
     @PutMapping
     public ResponseEntity<Experience> updateExperience(@PathVariable String id,
             @Valid @RequestBody Experience experience) {
