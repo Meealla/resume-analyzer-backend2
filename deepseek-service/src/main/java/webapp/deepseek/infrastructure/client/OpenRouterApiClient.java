@@ -1,4 +1,4 @@
-package webapp.deepseek.client;
+package webapp.deepseek.infrastructure.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;

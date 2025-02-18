@@ -1,4 +1,4 @@
-package webapp.deepseek.client;
+package webapp.deepseek.infrastructure.client;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;

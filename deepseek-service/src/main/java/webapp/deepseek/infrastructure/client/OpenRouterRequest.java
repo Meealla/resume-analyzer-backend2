@@ -1,4 +1,4 @@
-package webapp.deepseek.client;
+package webapp.deepseek.infrastructure.client;
 
 import lombok.Data;
 import webapp.deepseek.domain.ChatMessage;

@@ -3,9 +3,9 @@ package webapp.deepseek.application.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import webapp.deepseek.client.OpenRouterApiClient;
-import webapp.deepseek.client.OpenRouterRequest;
-import webapp.deepseek.client.OpenRouterResponse;
+import webapp.deepseek.infrastructure.client.OpenRouterApiClient;
+import webapp.deepseek.infrastructure.client.OpenRouterRequest;
+import webapp.deepseek.infrastructure.client.OpenRouterResponse;
 import webapp.deepseek.domain.ChatMessage;
 import webapp.deepseek.domain.service.DeepSeekService;
 
